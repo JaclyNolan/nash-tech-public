@@ -31,7 +31,7 @@ do
 				Console.WriteLine($"{s}");
 			break;
 		case 4:
-			return3List();
+			Return3Lists();
 			break;
 		case 5:
 			Member? member = main.ReturnFirstMemberInHanoi();
@@ -59,7 +59,7 @@ void PrintMenu()
 	Console.WriteLine("0. Exit");
 }
 
-void return3List()
+void Return3Lists()
 {
 	Console.WriteLine("1. Return a list of members who has birth year above the provided year");
 	Console.WriteLine("2. Return a list of members who has birth year is the provided year");
