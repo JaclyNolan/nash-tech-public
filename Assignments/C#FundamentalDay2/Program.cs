@@ -1,14 +1,14 @@
 ﻿using C_FundamentalDay2;
 using System.ComponentModel;
 
-printMenu();
+PrintMenu();
 int option;
 int year;
 bool shouldExit = false;
 MainLINQ main = new MainLINQ();
 do
 {
-	breakLine();
+	BreakLine();
 	if (!int.TryParse(Console.ReadLine(), out option))
 	{
 		Console.WriteLine("Invalid input");
@@ -21,23 +21,23 @@ do
 			shouldExit = true;
 			break;
 		case 1:
-			printList(main.ReturnMaleMembers());
+			PrintList(main.ReturnMaleMembers());
 			break;
 		case 2:
-			printOne(main.ReturnOldestMember());
+			PrintOne(main.ReturnOldestMember());
 			break;
 		case 3:
 			foreach (string s in main.ReturnFullNameList())
 				Console.WriteLine($"{s}");
 			break;
 		case 4:
-			return3List();
+			Return3List();
 			break;
 		case 5:
 			Member? member = main.ReturnFirstMemberInHanoi();
 			if (member != null)
 			{
-				printOne(member);
+				PrintOne(member);
 				break;
 			}
 			Console.WriteLine("No member is from Ha Noi");
@@ -48,7 +48,7 @@ do
 	}
 } while (shouldExit == false);
 
-void printMenu()
+void PrintMenu()
 {
 	Console.WriteLine("Welcome to my program");
 	Console.WriteLine("1. Return a list of members who is Male");
@@ -59,19 +59,19 @@ void printMenu()
 	Console.WriteLine("0. Exit");
 }
 
-void return3List()
+void Return3List()
 {
 	Console.WriteLine("1. Return a list of members who has birth year above the provided year");
 	Console.WriteLine("2. Return a list of members who has birth year is the provided year");
 	Console.WriteLine("3. Return a list of members who has birth year less the provided year");
 	Console.WriteLine("0. Exit");
 
-	breakLine();
+	BreakLine();
 	int option;
 	if (!int.TryParse(Console.ReadLine(), out option))
 	{
 		Console.WriteLine("Invalid input");
-		printMenu();
+		PrintMenu();
 		return;
 	}
 
@@ -86,7 +86,7 @@ void return3List()
 				Console.WriteLine("Invalid input");
 				break;
 			}
-			printList(main.ReturnMembersAboveDobYear(year));
+			PrintList(main.ReturnMembersAboveDobYear(year));
 			break;
 		case 2:
 			Console.WriteLine("Please choose a year");
@@ -95,7 +95,7 @@ void return3List()
 				Console.WriteLine("Invalid input");
 				break;
 			}
-			printList(main.ReturnMembersAboveDobYear(year));
+			PrintList(main.ReturnMembersAboveDobYear(year));
 			break;
 		case 3:
 			Console.WriteLine("Please choose a year");
@@ -104,31 +104,31 @@ void return3List()
 				Console.WriteLine("Invalid input");
 				break;
 			}
-			printList(main.ReturnMembersAboveDobYear(year));
+			PrintList(main.ReturnMembersAboveDobYear(year));
 			break;
 		default:
 			Console.WriteLine($"No option is signed to {option}");
 			break;
 	}
-	printMenu();
+	PrintMenu();
 }
 
-void breakLine()
+void BreakLine()
 {
 	Console.WriteLine("====================================================");
 	Console.WriteLine("Please choose an option");
 }
 
-void printList(List<Member> members)
+void PrintList(List<Member> members)
 {
 	if (members.Count == 0) Console.WriteLine("List is empty");
 	foreach (Member member in members)
 	{
-		printOne(member);
+		PrintOne(member);
 	}
 }
 
-void printOne(Member member)
+void PrintOne(Member member)
 {
 	Console.WriteLine(member.ToString());
 }
