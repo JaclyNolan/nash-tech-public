@@ -80,8 +80,8 @@ void Return3List()
 		case 0:
 			break;
 		case 1:
-			Console.WriteLine("Please choose a year");
-			if (!int.TryParse(Console.ReadLine(), out year))
+			Console.WriteLine("Please choose a year between 1 and 9999");
+			if (!int.TryParse(Console.ReadLine(), out year) || year < 1 || year > 9999)
 			{
 				Console.WriteLine("Invalid input");
 				break;
@@ -89,22 +89,22 @@ void Return3List()
 			PrintList(main.ReturnMembersAboveDobYear(year));
 			break;
 		case 2:
-			Console.WriteLine("Please choose a year");
-			if (!int.TryParse(Console.ReadLine(), out year))
+			Console.WriteLine("Please choose a year between 1 and 9999");
+			if (!int.TryParse(Console.ReadLine(), out year) || year < 1 || year > 9999)
 			{
 				Console.WriteLine("Invalid input");
 				break;
 			}
-			PrintList(main.ReturnMembersAboveDobYear(year));
+			PrintList(main.ReturnMembersIsDobYear(year));
 			break;
 		case 3:
-			Console.WriteLine("Please choose a year");
-			if (!int.TryParse(Console.ReadLine(), out year))
+			Console.WriteLine("Please choose a year between 1 and 9999");
+			if (!int.TryParse(Console.ReadLine(), out year) || year < 1 || year > 9999)
 			{
 				Console.WriteLine("Invalid input");
 				break;
 			}
-			PrintList(main.ReturnMembersAboveDobYear(year));
+			PrintList(main.ReturnMembersLessDobYear(year));
 			break;
 		default:
 			Console.WriteLine($"No option is signed to {option}");

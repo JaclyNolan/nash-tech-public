@@ -102,7 +102,7 @@ namespace C_FundamentalDay2
 
 		public Member? ReturnFirstMemberInHanoi()
 		{
-			return members.Where(member => member.Birthplace == "Ha Noi").FirstOrDefault();
+			return members.FirstOrDefault(member => member.Birthplace == "Ha Noi");
 		}
 	}
 }
