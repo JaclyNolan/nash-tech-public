@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,9 +74,15 @@ namespace C_FundamentalDay2
 			};
 		}
 
+		public static bool NotNullOrEmpty<T>(this IEnumerable<T> source)
+		{
+			return source != null && source.Any();
+		} 
+
 		public List<Member> ReturnMaleMembers()
 		{
-			return members.Where(member => member.Gender == true).ToList();
+			if (members.NotNull)) return new List<Member>();
+			return members.Where(member => member.Gender).ToList();
 		}
 
 		public Member ReturnOldestMember()
