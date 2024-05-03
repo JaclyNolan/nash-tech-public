@@ -53,12 +53,8 @@ namespace Net_Core_Assignment_Day_Middleware.Middlewares
         }
         private void LogData(Data data)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Hour)
-                //.WriteTo.Console()
-                .CreateLogger();
-            Log.Information($"{data}");
-            Log.CloseAndFlush();
+            //To-do: Move log path to appsettings for easier configuration
+            Log.Debug($"{data}");
         }
     }
 
