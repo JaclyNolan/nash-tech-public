@@ -1,13 +1,13 @@
 using Net_Core_Assignment_Day_Middleware.Middlewares;
 using Serilog;
-using Microsoft.Extensions.Configuration;
+using Serilog.Settings.Configuration;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
 Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
+    .ReadFrom.Configuration(configuration, new ConfigurationReaderOptions { SectionName = "Serilog:ConsoleLogger" })
     .CreateLogger();
 
 try

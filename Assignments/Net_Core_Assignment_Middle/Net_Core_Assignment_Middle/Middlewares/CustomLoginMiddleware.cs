@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Serilog;
+using Serilog.Settings.Configuration;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -10,6 +11,7 @@ namespace Net_Core_Assignment_Day_Middleware.Middlewares
     public class CustomLoginMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly IConfiguration _configuration;
         private class Data
         {
             public string Schema { get; set; } = string.Empty;
@@ -29,9 +31,10 @@ namespace Net_Core_Assignment_Day_Middleware.Middlewares
             }
         }
 
-        public CustomLoginMiddleware(RequestDelegate next)
+        public CustomLoginMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
+            _configuration = configuration;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -54,7 +57,11 @@ namespace Net_Core_Assignment_Day_Middleware.Middlewares
         private void LogData(Data data)
         {
             //To-do: Move log path to appsettings for easier configuration
-            Log.Debug($"{data}");
+            var fileLogger = new LoggerConfiguration()
+            .ReadFrom.Configuration(_configuration, new ConfigurationReaderOptions { SectionName = "Serilog:FileLogger" })
+            .CreateLogger();
+            fileLogger.Information($"{data}");
+            fileLogger.Dispose();
         }
     }
 
