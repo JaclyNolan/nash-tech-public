@@ -15,15 +15,17 @@ namespace MVCDotNetAssignment.BusinessLogics.Services
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("People");
 
+            var person1 = new Person();
+
             int column = 1;
-            worksheet.Cell(1, column++).Value = "First Name";
-            worksheet.Cell(1, column++).Value = "Last Name";
-            worksheet.Cell(1, column++).Value = "Gender";
-            worksheet.Cell(1, column++).Value = "Date of Birth";
-            worksheet.Cell(1, column++).Value = "Birthplace";
-            worksheet.Cell(1, column++).Value = "Phone Number";
-            worksheet.Cell(1, column++).Value = "Age";
-            worksheet.Cell(1, column++).Value = "Is Graduated";
+            worksheet.Cell(1, column++).Value = nameof(person1.FirstName);
+            worksheet.Cell(1, column++).Value = nameof(person1.LastName);
+            worksheet.Cell(1, column++).Value = nameof(person1.Gender);
+            worksheet.Cell(1, column++).Value = nameof(person1.DoB);
+            worksheet.Cell(1, column++).Value = nameof(person1.Birthplace);
+            worksheet.Cell(1, column++).Value = nameof(person1.PhoneNumber);
+            worksheet.Cell(1, column++).Value = nameof(person1.Age);
+            worksheet.Cell(1, column++).Value = nameof(person1.IsGraduated);
 
             int row = 2;
             foreach (Person person in people)
