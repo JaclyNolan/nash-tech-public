@@ -57,20 +57,5 @@ namespace MVCDotNetAssignment.WebApp.Areas.NashTech.Controllers
             List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearLessAsync(year);
             return Json(people);
         }
-        [HttpGet("download/excel")]
-        public async Task<IActionResult> GetExcelFile()
-        {
-            List<Person> people = await _peopleBusinessLogics.GetPeopleAsync();
-            string fileName = "People.xlsx";
-            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "ExportedFiles", fileName);
-
-            string directoryPath = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
-            ExcelService.CreateExcelFile(people, filePath);
-            return PhysicalFile(filePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-        }
     }
 }

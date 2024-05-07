@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCDotNetAssignment.BusinessLogics.Services;
 using MVCDotNetAssignment.Models.DTOs;
 using MVCDotNetAssignment.Models.Entities;
+using ClosedXML.Excel;
 
 namespace MVCDotNetAssignment.WebApp.Controllers
 {
@@ -11,7 +12,7 @@ namespace MVCDotNetAssignment.WebApp.Controllers
     {
         private readonly IPeopleBusinessLogics _peopleBusinessLogics;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public PeopleController(IPeopleBusinessLogics peopleBusinessLogics, IWebHostEnvironment webHostEnvironment)
+          public PeopleController(IPeopleBusinessLogics peopleBusinessLogics, IWebHostEnvironment webHostEnvironment)
         {
             _peopleBusinessLogics = peopleBusinessLogics;
             _webHostEnvironment = webHostEnvironment;
@@ -159,16 +160,48 @@ namespace MVCDotNetAssignment.WebApp.Controllers
         {
             List<Person> people = await _peopleBusinessLogics.GetPeopleAsync();
             string fileName = "People.xlsx";
-            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "ExportedFiles", fileName);
 
-            //To-do: Use Memory Files and MemoryStream instead of Local File
-            string directoryPath = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(directoryPath))
+            using (var workbook = new XLWorkbook())
             {
-                Directory.CreateDirectory(directoryPath);
+                var worksheet = workbook.Worksheets.Add("People");
+
+                var person1 = new Person();
+
+                int column = 1;
+                worksheet.Cell(1, column++).Value = nameof(person1.FirstName);
+                worksheet.Cell(1, column++).Value = nameof(person1.LastName);
+                worksheet.Cell(1, column++).Value = nameof(person1.Gender);
+                worksheet.Cell(1, column++).Value = nameof(person1.DoB);
+                worksheet.Cell(1, column++).Value = nameof(person1.Birthplace);
+                worksheet.Cell(1, column++).Value = nameof(person1.PhoneNumber);
+                worksheet.Cell(1, column++).Value = nameof(person1.Age);
+                worksheet.Cell(1, column++).Value = nameof(person1.IsGraduated);
+
+                int row = 2;
+                foreach (Person person in people)
+                {
+                    column = 1;
+                    worksheet.Cell(row, column++).Value = person.FirstName;
+                    worksheet.Cell(row, column++).Value = person.LastName;
+                    worksheet.Cell(row, column++).Value = person.Gender.ToString();
+                    worksheet.Cell(row, column++).Value = person.DoB.ToString("dd/MM/yyyy");
+                    worksheet.Cell(row, column++).Value = person.Birthplace;
+                    worksheet.Cell(row, column++).Value = person.PhoneNumber;
+                    worksheet.Cell(row, column++).Value = person.Age;
+                    worksheet.Cell(row, column++).Value = person.IsGraduated.ToString();
+
+                    row++;
+                }
+
+                byte[] excelData;
+                using (var memoryStream = new MemoryStream())
+                {
+                    workbook.SaveAs(memoryStream);
+                    excelData = memoryStream.ToArray();
+                }
+
+                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
-            ExcelService.CreateExcelFile(people, filePath);
-            return PhysicalFile(filePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
     }
 }
