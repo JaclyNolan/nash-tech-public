@@ -5,32 +5,45 @@ namespace MVCDotNetAssignment.Models.Repositories
 {
     public interface IPeopleRepository
     {
-        Task<Person> CreateAsync(Person person);
-        Task<Person> UpdateAsync(Person person);
-        Task<Person> DeleteAsync(Person person);
+        Task CreateAsync(Person person);
+        Task UpdateAsync(string id, Person person);
+        Task DeleteAsync(string id);
         Task<IEnumerable<Person>> GetAllAsync();
     }
     public class PeopleRepository : IPeopleRepository
     {
-        private readonly IEnumerable<Person> _people = new List<Person>();
+        private readonly List<Person> _people;
 
         public PeopleRepository() { 
             _people = PeopleDatabase._people;
         }
 
-        public async Task<Person> CreateAsync(Person person)
+        public async Task CreateAsync(Person person)
         {
-            throw new NotImplementedException();
+            await Task.Delay(100);
+            _people.Add(person);
+        }
+        public async Task UpdateAsync(string id, Person person)
+        {
+            await Task.Delay(100); //Simulate database
+            Person? personToUpdate = _people.Find(p => p.Id == new Guid(id));
+            if (personToUpdate == null) throw new ArgumentException("Person not found", nameof(id));
+            foreach (var prop in personToUpdate.GetType().GetProperties())
+            {
+                if (prop.CanWrite)
+                {
+                    prop.SetValue(personToUpdate, prop.GetValue(person));
+                }
+            }
         }
 
-        public async Task<Person> UpdateAsync(Person person)
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
-        }
+            await Task.Delay(100); //Simulate database
+            int personToRemoveIndex = _people.FindIndex(p => p.Id == new Guid(id));
+            if (personToRemoveIndex == -1) throw new ArgumentException("Person not found", nameof(id));
 
-        public async Task<Person> DeleteAsync(Person person)
-        {
-            throw new NotImplementedException();
+            _people.RemoveAt(personToRemoveIndex);
         }
 
         public async Task<IEnumerable<Person>> GetAllAsync()

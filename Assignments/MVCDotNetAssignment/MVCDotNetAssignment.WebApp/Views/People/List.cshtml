@@ -1,0 +1,90 @@
+﻿@using MVCDotNetAssignment.Models.Entities
+@model IEnumerable<Person>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>List People</h1>
+<a asp-controller="People" asp-action="GetExcelFile">
+    <button class="btn-primary">Export to Excel</button>
+    </a>
+<p>
+    <a asp-controller="People" asp-action="Create">
+        <button class ="btn-primary">Create New</button>
+    </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoB)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Birthplace)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsGraduated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </a> 
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthplace)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsGraduated)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -64,7 +64,6 @@ namespace MVCDotNetAssignment.WebApp.Areas.NashTech.Controllers
             string fileName = "People.xlsx";
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "ExportedFiles", fileName);
 
-            //To-do: Use Memory Files and MemoryStream instead of Local File
             string directoryPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryPath))
             {

@@ -14,6 +14,11 @@ namespace MVCDotNetAssignment.BusinessLogics.Services
         Task<List<Person>> GetPeopleBirthYearLessAsync(int year);
         //Task<List<Person>> GetPeopleByYearAsync(string operation, int year);
         Task<List<Person>> GetPeopleAsync();
+        Task CreatePersonAsync(Person person);
+        Task<Person?> GetPersonAsync(string id);
+        Task UpdatePersonAsync(string id, Person person);
+        Task DeletePersonAsync(string id);
+
     }
     public class PeopleBusinessLogics : IPeopleBusinessLogics
     {
@@ -22,6 +27,26 @@ namespace MVCDotNetAssignment.BusinessLogics.Services
         {
             _peopleRepository = peopleRepository;
         }
+
+        public async Task<Person?> GetPersonAsync(string id)
+        {
+            try
+            {
+                var people = await _peopleRepository.GetAllAsync();
+                return people.FirstOrDefault(person => person.Id == new Guid(id));
+            } catch (FormatException ex)
+            {
+                return null;
+            }
+            
+        }
+
+        public async Task CreatePersonAsync(Person person)
+        {
+            //To-do: validate data here later
+            await _peopleRepository.CreateAsync(person);
+        }
+
 
         public async Task<List<FullNameViewModel>> GetFullNameAsync()
         {
@@ -72,6 +97,16 @@ namespace MVCDotNetAssignment.BusinessLogics.Services
         {
             var people = await _peopleRepository.GetAllAsync();
             return people.Where(person => person.Gender == (Person.GenderEnum)gender).ToList();
+        }
+
+        public async Task UpdatePersonAsync(string id, Person person)
+        {
+            await _peopleRepository.UpdateAsync(id, person);
+        }
+
+        public async Task DeletePersonAsync(string id)
+        {
+            await _peopleRepository.DeleteAsync(id);
         }
     }
 }

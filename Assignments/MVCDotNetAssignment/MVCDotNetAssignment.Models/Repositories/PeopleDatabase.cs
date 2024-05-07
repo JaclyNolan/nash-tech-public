@@ -4,11 +4,10 @@ namespace MVCDotNetAssignment.Models.Repositories
 {
     public static class PeopleDatabase
     {
-        public static IEnumerable<Person> _people = new List<Person>
+        public static List<Person> _people = new List<Person>
         {
             new Person()
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Ánh",
                 LastName = "Nguyễn",
                 DoB = new DateTime(2003, 9, 19),
@@ -19,7 +18,6 @@ namespace MVCDotNetAssignment.Models.Repositories
             },
             new Person()
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Hoà",
                 LastName = "Nguyễn",
                 DoB = new DateTime(2002, 11, 5),
@@ -30,7 +28,6 @@ namespace MVCDotNetAssignment.Models.Repositories
             },
             new Person()
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Phương",
                 LastName = "Nguyễn",
                 DoB = new DateTime(2001, 4, 6),
@@ -41,7 +38,6 @@ namespace MVCDotNetAssignment.Models.Repositories
             },
             new Person()
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Phúc",
                 LastName = "Nguyễn",
                 DoB = new DateTime(1998, 10, 20),
@@ -52,7 +48,6 @@ namespace MVCDotNetAssignment.Models.Repositories
             },
             new Person()
             {
-                Id = Guid.NewGuid(),
                 FirstName = "Hoàng",
                 LastName = "Nguyễn",
                 DoB = new DateTime(2000, 1, 5),

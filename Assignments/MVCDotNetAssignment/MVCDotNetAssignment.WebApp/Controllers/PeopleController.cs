@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Mvc;
 using MVCDotNetAssignment.BusinessLogics.Services;
 using MVCDotNetAssignment.Models.DTOs;
 using MVCDotNetAssignment.Models.Entities;
 
 namespace MVCDotNetAssignment.WebApp.Controllers
 {
-    [Route("people")]
+    [Route("[controller]")]
     public class PeopleController : Controller
     {
         private readonly IPeopleBusinessLogics _peopleBusinessLogics;
@@ -14,6 +15,102 @@ namespace MVCDotNetAssignment.WebApp.Controllers
         {
             _peopleBusinessLogics = peopleBusinessLogics;
             _webHostEnvironment = webHostEnvironment;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            List<Person> people = await _peopleBusinessLogics.GetPeopleAsync();
+            
+            return View("List", people);
+        }
+        [HttpGet("Create")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost("Create")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(
+            "FirstName,LastName,Gender,DoB,Birthplace,PhoneNumber,IsGraduated")] Person person)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _peopleBusinessLogics.CreatePersonAsync(person);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+            return View(person);
+        }
+
+        [HttpGet("Edit/{id}")]
+        public async Task<ActionResult> Edit(string id)
+        {
+            Person? person = await _peopleBusinessLogics.GetPersonAsync(id);
+            if (person == null) return NotFound();
+            return View(person);
+        }
+
+        [HttpPost("Edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(string id, [Bind(
+            "FirstName,LastName,Gender,DoB,Birthplace,PhoneNumber,IsGraduated")] Person person)
+        {
+            Person? personExist = await _peopleBusinessLogics.GetPersonAsync(id);
+            if (personExist == null) return NotFound();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    await _peopleBusinessLogics.UpdatePersonAsync(id, person);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+            return View(person);
+        }
+
+        [HttpGet("Details/{id}")]
+        public async Task<ActionResult> Details(string id)
+        {
+            Person? person = await _peopleBusinessLogics.GetPersonAsync(id);
+            if (person == null) return NotFound();
+            return View(person);
+        }
+
+        [HttpPost("Delete/{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            try
+            {
+                Person? person = await _peopleBusinessLogics.GetPersonAsync(id);
+                if (person == null) return NotFound();
+                await _peopleBusinessLogics.DeletePersonAsync(id);
+            } catch
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+            
+            return View();
         }
 
         [HttpGet("gender/{gender}")]
@@ -64,6 +161,7 @@ namespace MVCDotNetAssignment.WebApp.Controllers
             string fileName = "People.xlsx";
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "ExportedFiles", fileName);
 
+            //To-do: Use Memory Files and MemoryStream instead of Local File
             string directoryPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directoryPath))
             {
