@@ -1,4 +1,4 @@
-using MVCDotNetAssignment.BusinessLogics.Repositories;
+using MVCDotNetAssignment.Models.Repositories;
 using MVCDotNetAssignment.BusinessLogics.Services;
 
 var builder = WebApplication.CreateBuilder(args);

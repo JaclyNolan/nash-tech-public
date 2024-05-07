@@ -1,17 +1,11 @@
 ﻿using MVCDotNetAssignment.Models.Entities;
 
-namespace MVCDotNetAssignment.BusinessLogics.Repositories
+namespace MVCDotNetAssignment.Models.Repositories
 {
-    public interface IPeopleRepository
+    public static class PeopleDatabase
     {
-        Task<Person> CreateAsync(Person person);
-        Task<Person> UpdateAsync(Person person);
-        Task<Person> DeleteAsync(Person person);
-        Task<IEnumerable<Person>> GetAllAsync();
-    }
-    public class PeopleRepository : IPeopleRepository
-    {
-        private readonly IEnumerable<Person> _people = new List<Person> {
+        public static IEnumerable<Person> _people = new List<Person>
+        {
             new Person()
             {
                 Id = Guid.NewGuid(),
@@ -68,27 +62,5 @@ namespace MVCDotNetAssignment.BusinessLogics.Repositories
                 PhoneNumber = "0123456789",
             }
         };
-
-        public async Task<Person> CreateAsync(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Person> UpdateAsync(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Person> DeleteAsync(Person person)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Person>> GetAllAsync()
-        {
-            await Task.Delay(100);
-            return _people;
-        }
-
     }
 }
