@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<Object>
+@{
+    ViewData["Title"] = "View Json";
+}
+
+<h1>Displaying Json Data</h1>
+
+<p><strong>Count:</strong> @Model.Count() records</p>
+
+@if (Model is null || !Model.Any())
+{
+    <p>No data available</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @*Interate through the Object Properties here to make the table header*@
+                @foreach (var item in Model.Take(1))
+                {
+                    foreach (var prop in item.GetType().GetProperties())
+                    {
+                        <th>@prop.Name</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @foreach (var prop in item.GetType().GetProperties())
+                    {
+                        <td>@prop.GetValue(item)</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

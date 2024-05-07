@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MVCDotNetAssignment.BusinessLogics.Services;
 using MVCDotNetAssignment.Models.DTOs;
 using MVCDotNetAssignment.Models.Entities;
@@ -20,20 +19,22 @@ namespace MVCDotNetAssignment.WebApp.Controllers
         [HttpGet("gender/{gender}")]
         public async Task<IActionResult> GetPeopleByGenderAsync(int gender)
         {
+            //To-do: implement if List is null or !any
             List<Person> people = await _peopleBusinessLogics.GetPeopleByGenderAsync(gender);
-            return Json(people);
+            return View("ViewJson", people);
         }
         [HttpGet("oldest")]
         public async Task<IActionResult> GetOldestPersonAsync(int gender)
         {
             Person person = await _peopleBusinessLogics.GetOldestPersonAsync();
-            return Json(person);
+            return View("ViewObject", person);
         }
         [HttpGet("fullnames")]
         public async Task<IActionResult> GetFullNamesAsync()
         {
             List<FullNameViewModel> fullNames = await _peopleBusinessLogics.GetFullNameAsync();
-            return Json(fullNames);
+            return View("ViewJson", fullNames);
+
         }
         //To-do: add try catch to catch bad request error for bad query string
         //Do it in middleware, check for Task<IActionResult> Method(int number) -> do tryparse number else return bad request
@@ -42,19 +43,19 @@ namespace MVCDotNetAssignment.WebApp.Controllers
         public async Task<IActionResult> GetPeopleAboveYearAsync(int year)
         {
             List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearAboveAsync(year);
-            return Json(people);
+            return View("ViewJson", people);
         }
         [HttpGet("age/is/{year}")]
         public async Task<IActionResult> GetPeopleIsYearAsync(int year)
         {
             List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearIsAsync(year);
-            return Json(people);
+            return View("ViewJson", people);
         }
         [HttpGet("age/less/{year}")]
         public async Task<IActionResult> GetPeopleLessYearAsync(int year)
         {
             List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearLessAsync(year);
-            return Json(people);
+            return View("ViewJson", people);
         }
         [HttpGet("download/excel")]
         public async Task<IActionResult> GetExcelFile()
