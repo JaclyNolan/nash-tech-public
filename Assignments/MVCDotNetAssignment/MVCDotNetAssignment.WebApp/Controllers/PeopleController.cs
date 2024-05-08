@@ -18,10 +18,28 @@ namespace MVCDotNetAssignment.WebApp.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, int? page)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             List<Person> people = await _peopleBusinessLogics.GetPeopleAsync();
-            
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    people = people.OrderByDescending(s => s.FirstName).ToList();
+                    break;
+                case "Date":
+                    people = people.OrderBy(s => s.DoB).ToList();
+                    break;
+                case "date_desc":
+                    people = people.OrderByDescending(s => s.DoB).ToList();
+                    break;
+                default:
+                    people = people.OrderBy(s => s.FirstName).ToList();
+                    break;
+            }
+
             return View("List", people);
         }
         [HttpGet("Create")]
