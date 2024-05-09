@@ -108,6 +108,7 @@ namespace API_ASPNET_Assignment1.WebAPI.Controllers
             return CreatedAtAction(nameof(GetTaskModel), new { id = taskModel.Id }, taskModel);
         }
 
+        // POST: api/tasks/bulk
         [HttpPost("bulk")]
         public async Task<ActionResult> PostTaskModelsAsync([FromBody] List<TaskRequestCreate> taskRequestCreates)
         {
@@ -123,7 +124,7 @@ namespace API_ASPNET_Assignment1.WebAPI.Controllers
 
         // DELETE: api/Task/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTaskModel(Guid id)
+        public async Task<IActionResult> DeleteTaskModelAsync(Guid id)
         {
             var taskModel = await _context.Tasks.FindAsync(id); 
             if (taskModel == null)
@@ -137,6 +138,7 @@ namespace API_ASPNET_Assignment1.WebAPI.Controllers
             return NoContent();
         }
 
+        // DELETE: api/tasks/bulk
         [HttpDelete("bulk")]
         public async Task<ActionResult> DeleteTaskModelsAsync([FromBody] List<Guid> ids)
         {
