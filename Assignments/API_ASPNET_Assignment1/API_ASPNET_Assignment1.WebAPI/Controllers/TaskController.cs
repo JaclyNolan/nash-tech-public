@@ -65,6 +65,7 @@ namespace API_ASPNET_Assignment1.WebAPI.Controllers
             return _mapper.Map<TaskViewModel>(taskModel);
         }
 
+        //To-do: Don't show the business model out -> use taskEditRequest
         // PUT: api/Task/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

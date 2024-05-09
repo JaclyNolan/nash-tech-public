@@ -7,12 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Bogus" Version="35.5.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	<ItemGroup>
+    <ProjectReference Include="..\API_ASPNET_Assignment1.Models\API_ASPNET_Assignment1.Models.csproj" />
   </ItemGroup>
 
 </Project>

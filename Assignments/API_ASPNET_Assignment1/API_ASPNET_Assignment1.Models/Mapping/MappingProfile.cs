@@ -1,5 +1,6 @@
 ﻿using API_ASPNET_Assignment1.Models.DTOs;
 using API_ASPNET_Assignment1.Models.Entities;
+using API_ASPNET_Assignment1.WebAPI.DTOs;
 using AutoMapper;
 
 namespace API_ASPNET_Assignment1.Models.Mapping
@@ -8,9 +9,10 @@ namespace API_ASPNET_Assignment1.Models.Mapping
     {
         public MappingProfile() {
             CreateMap<TaskModel, TaskViewModel>();
-            //CreateMap<List<TaskModel>, List<TaskViewModel>>();
+            CreateMap<Person, PersonViewModel>();
             CreateMap<TaskRequestCreate, TaskModel>();
-            //CreateMap<List<TaskRequestCreate>, List<TaskModel>>();
+            CreateMap<PersonCreateRequest, Person>();
+            CreateMap<PersonUpdateRequest, Person>();
         }
     }
 }

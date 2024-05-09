@@ -6,6 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+    <PropertyGroup>
+	    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	    <NoWarn>$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
@@ -19,7 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\API_ASPNET_Assignment1.BusinessLogic\API_ASPNET_Assignment1.BusinessLogic.csproj" />
     <ProjectReference Include="..\API_ASPNET_Assignment1.Models\API_ASPNET_Assignment1.Models.csproj" />
   </ItemGroup>
+
+	
 
 </Project>
