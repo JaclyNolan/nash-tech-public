@@ -1,8 +1,10 @@
-version: '3.4'
+version: '0.0'
+name: ef-core-assignment1
 
 services:
-  api:
+  ef_core_assignment1.webapi:
     image: ${DOCKER_REGISTRY-}efcoreassignment1webapi
+    container_name: api
     build:
       context: .
       dockerfile: EF_Core_Assignment1.WebAPI/Dockerfile
