@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<NashTechContext>(opt =>
 {
     //If Migration use appsetting.json value, if Debugging use ENV value provided by dockercompose.override.yml
-    if (Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") == null)
+        if (Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") == null)
         Environment.SetEnvironmentVariable(
             "SQLSERVER_CONNECTION_STRING", 
             builder.Configuration.GetSection("ConnectionStrings:SqlServer").Value);
@@ -26,6 +26,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<NashTechContext>();
+    dbContext.Database.Migrate();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
