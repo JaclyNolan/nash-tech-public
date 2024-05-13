@@ -1,5 +1,6 @@
 using EF_Core_Assignment1.Persistance.Contexts;
 using EF_Core_Assignment1.Persistance.Seeder;
+using EF_Core_Assignment1.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
@@ -39,20 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // Seed the database within a new scope
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<NashTechContext>();
-        NashTechSeeder.SeederAsync(context);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
-    }
-}
+app.MigrationDatabase();
+app.SeedDatabase();
 
 app.UseAuthorization();
 
