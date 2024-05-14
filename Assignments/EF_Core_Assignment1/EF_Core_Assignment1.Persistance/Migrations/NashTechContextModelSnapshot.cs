@@ -104,8 +104,10 @@ namespace EF_Core_Assignment1.Persistance.Migrations
 
             modelBuilder.Entity("EF_Core_Assignment1.Domain.Entities.ProjectEmployee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("DateCreated")
@@ -117,20 +119,15 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                     b.Property<DateTimeOffset?>("DateUpdated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ProjectId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProjectId", "EmployeeId");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectEmployees");
                 });
@@ -153,7 +150,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("SalaryAmmount")
+                    b.Property<float>("SalaryAmount")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -214,7 +211,8 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 {
                     b.Navigation("ProjectEmployees");
 
-                    b.Navigation("Salary");
+                    b.Navigation("Salary")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EF_Core_Assignment1.Domain.Entities.Project", b =>

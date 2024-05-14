@@ -29,6 +29,73 @@ namespace EF_Core_Assignment1.Persistance.Contexts
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure one-to-many relationship between Department and Employee
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Department)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DepartmentId)
+                .IsRequired();
+
+            // Configure one-to-one relationship between Employee and Salary
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Salary)
+                .WithOne(s => s.Employee)
+                .HasForeignKey<Salary>(s => s.EmployeeId)
+                .IsRequired();
+
+            // Configure many-to-many relationship between Employee and Project
+            modelBuilder.Entity<ProjectEmployee>()
+                .HasKey(pe => new { pe.ProjectId, pe.EmployeeId });
+
+            modelBuilder.Entity<ProjectEmployee>()
+                .HasOne(pe => pe.Project)
+                .WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(pe => pe.ProjectId);
+
+            modelBuilder.Entity<ProjectEmployee>()
+                .HasOne(pe => pe.Employee)
+                .WithMany(e => e.ProjectEmployees)
+                .HasForeignKey(pe => pe.EmployeeId);
+
+            // Configure many-to-many relationship between Project and Employee
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.Projects)
+                .WithMany(p => p.Employees)
+                .UsingEntity<ProjectEmployee>(
+                    j => j
+                        .HasOne(pe => pe.Project)
+                        .WithMany(p => p.ProjectEmployees)
+                        .HasForeignKey(pe => pe.ProjectId),
+                    j => j
+                        .HasOne(pe => pe.Employee)
+                        .WithMany(e => e.ProjectEmployees)
+                        .HasForeignKey(pe => pe.EmployeeId)
+                );
+
+            // Configure other properties
+            modelBuilder.Entity<Department>()
+                .Property(d => d.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Salary>()
+                .Property(s => s.SalaryAmount)
+                .IsRequired();
+
+            modelBuilder.Entity<Project>()
+                .Property(p => p.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<ProjectEmployee>()
+                .Property(pe => pe.Enable)
+                .IsRequired();
+        }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateTimeStamp();

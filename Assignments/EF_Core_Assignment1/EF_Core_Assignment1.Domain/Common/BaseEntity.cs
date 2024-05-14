@@ -10,7 +10,7 @@ namespace EF_Core_Assignment1.Domain.Common
     public class BaseEntity
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public virtual Guid Id { get; set; } = Guid.NewGuid();
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset? DateUpdated { get; set; }
         public DateTimeOffset? DateDeleted { get; set; }

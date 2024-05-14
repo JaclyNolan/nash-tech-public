@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EF_Core_Assignment1.Domain\EF_Core_Assignment1.Domain.csproj" />
+    <ProjectReference Include="..\EF_Core_Assignment1.Persistance\EF_Core_Assignment1.Persistance.csproj" />
+  </ItemGroup>
+
 </Project>

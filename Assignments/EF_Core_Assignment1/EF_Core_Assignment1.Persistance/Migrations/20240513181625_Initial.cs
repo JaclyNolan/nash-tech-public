@@ -17,7 +17,6 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DateDeleted = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
@@ -69,9 +68,9 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 name: "ProjectEmployees",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Enable = table.Column<bool>(type: "bit", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -79,7 +78,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectEmployees", x => x.Id);
+                    table.PrimaryKey("PK_ProjectEmployees", x => new { x.ProjectId, x.EmployeeId });
                     table.ForeignKey(
                         name: "FK_ProjectEmployees_Employees_EmployeeId",
                         column: x => x.EmployeeId,
@@ -100,7 +99,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SalaryAmmount = table.Column<float>(type: "real", nullable: false),
+                    SalaryAmount = table.Column<float>(type: "real", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DateDeleted = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
@@ -125,11 +124,6 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                 name: "IX_ProjectEmployees_EmployeeId",
                 table: "ProjectEmployees",
                 column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectEmployees_ProjectId",
-                table: "ProjectEmployees",
-                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Salaries_EmployeeId",

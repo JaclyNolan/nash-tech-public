@@ -1,14 +1,19 @@
+using EF_Core_Assignment1.Application.Mapper;
+using EF_Core_Assignment1.Application.Services;
 using EF_Core_Assignment1.Persistance.Contexts;
 using EF_Core_Assignment1.Persistance.Seeder;
 using EF_Core_Assignment1.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(opt => 
+    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<NashTechContext>(opt =>
 {
@@ -22,16 +27,20 @@ builder.Services.AddDbContext<NashTechContext>(opt =>
     Console.WriteLine(Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING"));
 });
 
+builder.Services.AddScoped<EmployeeServices>();
+builder.Services.AddAutoMapper(typeof(NashTechProfile).Assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//builder.Services.AddControllersWithViews()
+//    .AddNewtonsoftJson(options =>
+//    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+//);
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<NashTechContext>();
-    dbContext.Database.Migrate();
-}
+app.MigrationDatabase();
+app.SeedDatabase();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -40,8 +49,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Seed the database within a new scope
-app.MigrationDatabase();
-app.SeedDatabase();
+
 
 app.UseAuthorization();
 

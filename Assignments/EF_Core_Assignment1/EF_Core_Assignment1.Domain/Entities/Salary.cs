@@ -10,10 +10,11 @@ namespace EF_Core_Assignment1.Domain.Entities
 {
     public class Salary : BaseEntity
     {
-        [Required]
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
         [Required]
-        public float SalaryAmmount { get; set; }
+        public float SalaryAmount { get; set; }
     }
 }

@@ -38,6 +38,15 @@ namespace EF_Core_Assignment1.Persistance.Seeder
                 .RuleFor(e => e.DepartmentId, f => f.PickRandom(departments).Id);
 
             var employees = employeeFaker.Generate(20); // Generate 20 employees
+
+            // Seed Salaries
+            var salaryFaker = new Faker<Salary>()
+                .RuleFor(s => s.SalaryAmount, f => (float)f.Finance.Amount(2000, 8000));
+
+            foreach (var employee in employees)
+            {
+                employee.Salary = salaryFaker.Generate(); // Generate a salary for each employee
+            }
             _context.Employees.AddRange(employees);
             _context.SaveChanges();
 
@@ -51,18 +60,13 @@ namespace EF_Core_Assignment1.Persistance.Seeder
 
             // Seed ProjectEmployees
             var projectEmployeeFaker = new Faker<ProjectEmployee>()
-                .RuleFor(pe => pe.Project, f => f.PickRandom(projects))
-                .RuleFor(pe => pe.Employee, f => f.PickRandom(employees))
+                .RuleFor(pe => pe.ProjectId, f => f.PickRandom(projects).Id)
+                .RuleFor(pe => pe.EmployeeId, f => f.PickRandom(employees).Id)
                 .RuleFor(pe => pe.Enable, f => f.Random.Bool());
 
             var projectEmployees = projectEmployeeFaker.Generate(30); // Generate 30 project employees
             _context.ProjectEmployees.AddRange(projectEmployees);
             _context.SaveChanges();
-
-            // Seed Salaries
-            var salaryFaker = new Faker<Salary>()
-                .RuleFor(s => s.EmployeeId, f => f.PickRandom(employees).Id)
-                .RuleFor(s => s.SalaryAmmount, f => (float) f.Finance.Amount(2000, 8000)); // Generate salary between 2000 and 8000
 
             var salaries = salaryFaker.Generate(15); // Generate 15 salaries
             _context.Salaries.AddRange(salaries);
