@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using MVCDotNetAssignment.BusinessLogics.Services;
-using MVCDotNetAssignment.Models.DTOs;
-using MVCDotNetAssignment.Models.Entities;
+using MVCDotNetAssignment.Application.Services;
+using MVCDotNetAssignment.Application.DTOs;
+using MVCDotNetAssignment.Domain.Entities;
 
 namespace MVCDotNetAssignment.WebApp.Areas.NashTech.Controllers
 {
@@ -10,9 +10,9 @@ namespace MVCDotNetAssignment.WebApp.Areas.NashTech.Controllers
     [Route("[area]/people")]
     public class PeopleController : Controller
     {
-        private readonly IPeopleBusinessLogics _peopleBusinessLogics;
+        private readonly IPeopleService _peopleBusinessLogics;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public PeopleController(IPeopleBusinessLogics peopleBusinessLogics, IWebHostEnvironment webHostEnvironment)
+        public PeopleController(IPeopleService peopleBusinessLogics, IWebHostEnvironment webHostEnvironment)
         {
             _peopleBusinessLogics = peopleBusinessLogics;
             _webHostEnvironment = webHostEnvironment;
@@ -39,22 +39,10 @@ namespace MVCDotNetAssignment.WebApp.Areas.NashTech.Controllers
         //To-do: add try catch to catch bad request error for bad query string
         //Do it in middleware, check for Task<IActionResult> Method(int number) -> do tryparse number else return bad request
         //Easier way is to just try catch in the controller action itself. Better for small projects
-        [HttpGet("age/above/{year}")]
-        public async Task<IActionResult> GetPeopleAboveYearAsync(int year)
+        [HttpGet("age")]
+        public async Task<IActionResult> GetPeopleByYearAsync([FromQuery] string operation, [FromQuery] int year)
         {
-            List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearAboveAsync(year);
-            return Json(people);
-        }
-        [HttpGet("age/is/{year}")]
-        public async Task<IActionResult> GetPeopleIsYearAsync(int year)
-        {
-            List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearIsAsync(year);
-            return Json(people);
-        }
-        [HttpGet("age/less/{year}")]
-        public async Task<IActionResult> GetPeopleLessYearAsync(int year)
-        {
-            List<Person> people = await _peopleBusinessLogics.GetPeopleBirthYearLessAsync(year);
+            List<Person> people = await _peopleBusinessLogics.GetPeopleByBirthYearAsync(operation, year);
             return Json(people);
         }
     }

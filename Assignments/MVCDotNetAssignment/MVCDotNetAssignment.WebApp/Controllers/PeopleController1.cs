@@ -39,7 +39,7 @@ namespace MVCDotNetAssignment.WebApp.Controllers
         }
 
         // GET: PeopleController1/Edit/5
-        public ActionResult Edit(int id)
+       public ActionResult Edit(int id)
         {
             return View();
         }

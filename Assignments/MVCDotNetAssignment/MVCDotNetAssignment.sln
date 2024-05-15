@@ -3,11 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDotNetAssignment.WebApp", "MVCDotNetAssignment.WebApp\MVCDotNetAssignment.WebApp.csproj", "{02783A74-271C-42F1-8FC6-6F42204D7BD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCDotNetAssignment.WebApp", "MVCDotNetAssignment.WebApp\MVCDotNetAssignment.WebApp.csproj", "{02783A74-271C-42F1-8FC6-6F42204D7BD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDotNetAssignment.BusinessLogics", "MVCDotNetAssignment.BusinessLogics\MVCDotNetAssignment.BusinessLogics.csproj", "{B8C8435E-69CA-43CC-9B76-F671C1B47CBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCDotNetAssignment.Application", "MVCDotNetAssignment.BusinessLogics\MVCDotNetAssignment.Application.csproj", "{B8C8435E-69CA-43CC-9B76-F671C1B47CBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDotNetAssignment.Models", "MVCDotNetAssignment.Models\MVCDotNetAssignment.Models.csproj", "{D907D0D6-812C-4AB9-B052-7ACC4F3381B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCDotNetAssignment.Domain", "MVCDotNetAssignment.Models\MVCDotNetAssignment.Domain.csproj", "{D907D0D6-812C-4AB9-B052-7ACC4F3381B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{3F137303-E1AE-4F4D-B898-9B8E0EFF7257}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{B3559086-0CBF-41EB-9712-AF07352B7B05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7E1C4D64-780D-41C1-8E97-C51746AE389E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCDotNetAssignment.Application.Tests", "MVCDotNetAssignment.Application.Tests\MVCDotNetAssignment.Application.Tests.csproj", "{15AECFD6-2E9E-47F6-8080-D6E03377A471}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{32F1DC22-A0DC-4650-871A-79F4E8D73C72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCDotNetAssignment.Persistance", "MVCDotNetAssignment.Persistance\MVCDotNetAssignment.Persistance.csproj", "{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDotNetAssignment.WebApp.Tests", "MVCDotNetAssignment.WebApp.Tests\MVCDotNetAssignment.WebApp.Tests.csproj", "{CFEF80B2-9147-49E0-8DC0-3F1A88690A64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +41,29 @@ Global
 		{D907D0D6-812C-4AB9-B052-7ACC4F3381B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D907D0D6-812C-4AB9-B052-7ACC4F3381B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D907D0D6-812C-4AB9-B052-7ACC4F3381B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15AECFD6-2E9E-47F6-8080-D6E03377A471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AECFD6-2E9E-47F6-8080-D6E03377A471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AECFD6-2E9E-47F6-8080-D6E03377A471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AECFD6-2E9E-47F6-8080-D6E03377A471}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFEF80B2-9147-49E0-8DC0-3F1A88690A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFEF80B2-9147-49E0-8DC0-3F1A88690A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFEF80B2-9147-49E0-8DC0-3F1A88690A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFEF80B2-9147-49E0-8DC0-3F1A88690A64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02783A74-271C-42F1-8FC6-6F42204D7BD9} = {B3559086-0CBF-41EB-9712-AF07352B7B05}
+		{B8C8435E-69CA-43CC-9B76-F671C1B47CBB} = {3F137303-E1AE-4F4D-B898-9B8E0EFF7257}
+		{D907D0D6-812C-4AB9-B052-7ACC4F3381B1} = {3F137303-E1AE-4F4D-B898-9B8E0EFF7257}
+		{15AECFD6-2E9E-47F6-8080-D6E03377A471} = {7E1C4D64-780D-41C1-8E97-C51746AE389E}
+		{96911A51-3B3D-4B04-8B0D-BC5ED13FB85E} = {32F1DC22-A0DC-4650-871A-79F4E8D73C72}
+		{CFEF80B2-9147-49E0-8DC0-3F1A88690A64} = {7E1C4D64-780D-41C1-8E97-C51746AE389E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {864AEF38-89E9-46CA-8965-64FCAD33613C}

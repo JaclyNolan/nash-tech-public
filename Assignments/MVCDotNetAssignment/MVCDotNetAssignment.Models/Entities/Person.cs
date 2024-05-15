@@ -1,15 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MVCDotNetAssignment.Models.Entities
+namespace MVCDotNetAssignment.Domain.Entities
 {
     public class Person
     {
-        public Guid Id { get; }
-        public Person()
-        {
-            Id = Guid.NewGuid(); // Generate a new unique identifier
-        }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         //Add attribute names here for other businesses to use
         [DisplayName("First Name")]

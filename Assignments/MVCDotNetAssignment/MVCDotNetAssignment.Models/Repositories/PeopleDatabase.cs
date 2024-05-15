@@ -1,6 +1,6 @@
-﻿using MVCDotNetAssignment.Models.Entities;
+﻿using MVCDotNetAssignment.Domain.Entities;
 
-namespace MVCDotNetAssignment.Models.Repositories
+namespace MVCDotNetAssignment.Domain.Repositories
 {
     public static class PeopleDatabase
     {

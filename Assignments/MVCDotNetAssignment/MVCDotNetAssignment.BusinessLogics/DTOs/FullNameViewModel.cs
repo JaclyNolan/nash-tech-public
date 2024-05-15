@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVCDotNetAssignment.Models.DTOs
+namespace MVCDotNetAssignment.Application.DTOs
 {
     public class FullNameViewModel
     {

@@ -1,5 +1,5 @@
-using MVCDotNetAssignment.Models.Repositories;
-using MVCDotNetAssignment.BusinessLogics.Services;
+using MVCDotNetAssignment.Domain.Repositories;
+using MVCDotNetAssignment.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,5 +34,5 @@ app.Run();
 void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IPeopleRepository, PeopleRepository>();
-    services.AddScoped<IPeopleBusinessLogics, PeopleBusinessLogics>();
+    services.AddScoped<IPeopleService, PersonService>();
 }
