@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using MVCDotNetAssignment.Application.DTOs;
 using DocumentFormat.OpenXml.Office2013.Word;
 using Person = MVCDotNetAssignment.Domain.Entities.Person;
+using ClosedXML.Excel;
 
 namespace MVCDotNetAssignment.WebApp.Tests.Controllers
 {
@@ -276,7 +277,7 @@ namespace MVCDotNetAssignment.WebApp.Tests.Controllers
             _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
 
             // Act
-            var result = await _controller.Index(null, null);
+            var result = await _controller.Index(null);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -284,6 +285,124 @@ namespace MVCDotNetAssignment.WebApp.Tests.Controllers
             List<Person> actualPeople = Assert.IsAssignableFrom<List<Person>>(viewResult.Model);
             Assert.Contains(people[0], actualPeople);
             Assert.Contains(people[1], actualPeople);
+        }
+
+        [Fact]
+        public async Task Index_ReturnsViewResult_WithListOfPeople_SortedByFirstNameAsc()
+        {
+            // Arrange
+            var people = GetTestPeople();
+            _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
+
+            // Act
+            var result = await _controller.Index("");
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<Person>>(viewResult.Model);
+            Assert.Equal(people.OrderBy(p => p.FirstName).ToList(), model);
+        }
+
+        [Fact]
+        public async Task Index_ReturnsViewResult_WithListOfPeople_SortedByFirstNameDesc()
+        {
+            // Arrange
+            var people = GetTestPeople();
+            _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
+
+            // Act
+            var result = await _controller.Index("name_desc");
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<Person>>(viewResult.Model);
+            Assert.Equal(people.OrderByDescending(p => p.FirstName).ToList(), model);
+        }
+
+        [Fact]
+        public async Task Index_ReturnsViewResult_WithListOfPeople_SortedByDoBAsc()
+        {
+            // Arrange
+            var people = GetTestPeople();
+            _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
+
+            // Act
+            var result = await _controller.Index("Date");
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<Person>>(viewResult.Model);
+            Assert.Equal(people.OrderBy(p => p.DoB).ToList(), model);
+        }
+
+        [Fact]
+        public async Task Index_ReturnsViewResult_WithListOfPeople_SortedByDoBDesc()
+        {
+            // Arrange
+            var people = GetTestPeople();
+            _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
+
+            // Act
+            var result = await _controller.Index("date_desc");
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<Person>>(viewResult.Model);
+            Assert.Equal(people.OrderByDescending(p => p.DoB).ToList(), model);
+        }
+
+        private List<Person> GetTestPeople()
+        {
+            return new List<Person>
+            {
+                new Person { FirstName = "John", LastName = "Doe", DoB = new DateTime(1990, 1, 1) },
+                new Person { FirstName = "Jane", LastName = "Doe", DoB = new DateTime(1985, 1, 1) }
+            };
+        }
+
+        [Fact]
+        public async Task GetExcelFile_ReturnsFileResult_WithCorrectContentTypeAndFileName()
+        {
+            // Arrange
+            var people = GetTestPeople();
+            _mockPeopleService.Setup(svc => svc.GetPeopleAsync()).ReturnsAsync(people);
+
+            // Act
+            var result = await _controller.GetExcelFile();
+
+            // Assert
+            var fileResult = Assert.IsType<FileContentResult>(result);
+            Assert.Equal("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileResult.ContentType);
+            Assert.Equal("People.xlsx", fileResult.FileDownloadName);
+
+            // Optional: Additional assertions to verify the content of the file
+            using (var memoryStream = new MemoryStream(fileResult.FileContents))
+            {
+                var workbook = new XLWorkbook(memoryStream);
+                var worksheet = workbook.Worksheet("People");
+                Assert.NotNull(worksheet);
+
+                // Verify headers
+                Assert.Equal("FirstName", worksheet.Cell(1, 1).Value);
+                Assert.Equal("LastName", worksheet.Cell(1, 2).Value);
+                Assert.Equal("Gender", worksheet.Cell(1, 3).Value);
+                Assert.Equal("DoB", worksheet.Cell(1, 4).Value);
+                Assert.Equal("Birthplace", worksheet.Cell(1, 5).Value);
+                Assert.Equal("PhoneNumber", worksheet.Cell(1, 6).Value);
+                Assert.Equal("Age", worksheet.Cell(1, 7).Value);
+                Assert.Equal("IsGraduated", worksheet.Cell(1, 8).Value);
+
+                // Verify data
+                var firstPerson = people.First();
+                Assert.Equal(firstPerson.FirstName, worksheet.Cell(2, 1).Value);
+                Assert.Equal(firstPerson.LastName, worksheet.Cell(2, 2).Value);
+                Assert.Equal(firstPerson.Gender.ToString(), worksheet.Cell(2, 3).Value);
+                Assert.Equal(firstPerson.DoB.ToString("dd/MM/yyyy"), worksheet.Cell(2, 4).Value);
+                Assert.Equal(firstPerson.Birthplace, worksheet.Cell(2, 5).Value);
+                Assert.Equal(firstPerson.PhoneNumber, worksheet.Cell(2, 6).Value);
+                Assert.Equal(firstPerson.Age, worksheet.Cell(2, 7).Value);
+                Assert.Equal(firstPerson.IsGraduated.ToString(), worksheet.Cell(2, 8).Value);
+            }
         }
     }
 }

@@ -106,53 +106,58 @@ namespace MVCDotNetAssignment.WebApp.Controllers
             return View(person);
         }
 
+        private XLWorkbook GenerateXLWorkbook(List<Person> people)
+        {
+            XLWorkbook workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("People");
+
+            var person1 = new Person();
+
+            int column = 1;
+            worksheet.Cell(1, column++).Value = nameof(person1.FirstName);
+            worksheet.Cell(1, column++).Value = nameof(person1.LastName);
+            worksheet.Cell(1, column++).Value = nameof(person1.Gender);
+            worksheet.Cell(1, column++).Value = nameof(person1.DoB);
+            worksheet.Cell(1, column++).Value = nameof(person1.Birthplace);
+            worksheet.Cell(1, column++).Value = nameof(person1.PhoneNumber);
+            worksheet.Cell(1, column++).Value = nameof(person1.Age);
+            worksheet.Cell(1, column++).Value = nameof(person1.IsGraduated);
+
+            int row = 2;
+            foreach (Person person in people)
+            {
+                column = 1;
+                worksheet.Cell(row, column++).Value = person.FirstName;
+                worksheet.Cell(row, column++).Value = person.LastName;
+                worksheet.Cell(row, column++).Value = person.Gender.ToString();
+                worksheet.Cell(row, column++).Value = person.DoB.ToString("dd/MM/yyyy");
+                worksheet.Cell(row, column++).Value = person.Birthplace;
+                worksheet.Cell(row, column++).Value = person.PhoneNumber;
+                worksheet.Cell(row, column++).Value = person.Age;
+                worksheet.Cell(row, column++).Value = person.IsGraduated.ToString();
+
+                row++;
+            }
+
+            return workbook;
+        }
+
         [HttpGet("download/excel")]
         public async Task<IActionResult> GetExcelFile()
         {
             List<Person> people = await _peopleBusinessLogics.GetPeopleAsync();
             string fileName = "People.xlsx";
 
-            using (var workbook = new XLWorkbook())
+            XLWorkbook workbook = GenerateXLWorkbook(people);
+
+            byte[] excelData;
+            using (var memoryStream = new MemoryStream())
             {
-                var worksheet = workbook.Worksheets.Add("People");
-
-                var person1 = new Person();
-
-                int column = 1;
-                worksheet.Cell(1, column++).Value = nameof(person1.FirstName);
-                worksheet.Cell(1, column++).Value = nameof(person1.LastName);
-                worksheet.Cell(1, column++).Value = nameof(person1.Gender);
-                worksheet.Cell(1, column++).Value = nameof(person1.DoB);
-                worksheet.Cell(1, column++).Value = nameof(person1.Birthplace);
-                worksheet.Cell(1, column++).Value = nameof(person1.PhoneNumber);
-                worksheet.Cell(1, column++).Value = nameof(person1.Age);
-                worksheet.Cell(1, column++).Value = nameof(person1.IsGraduated);
-
-                int row = 2;
-                foreach (Person person in people)
-                {
-                    column = 1;
-                    worksheet.Cell(row, column++).Value = person.FirstName;
-                    worksheet.Cell(row, column++).Value = person.LastName;
-                    worksheet.Cell(row, column++).Value = person.Gender.ToString();
-                    worksheet.Cell(row, column++).Value = person.DoB.ToString("dd/MM/yyyy");
-                    worksheet.Cell(row, column++).Value = person.Birthplace;
-                    worksheet.Cell(row, column++).Value = person.PhoneNumber;
-                    worksheet.Cell(row, column++).Value = person.Age;
-                    worksheet.Cell(row, column++).Value = person.IsGraduated.ToString();
-
-                    row++;
-                }
-
-                byte[] excelData;
-                using (var memoryStream = new MemoryStream())
-                {
-                    workbook.SaveAs(memoryStream);
-                    excelData = memoryStream.ToArray();
-                }
-
-                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                workbook.SaveAs(memoryStream);
+                excelData = memoryStream.ToArray();
             }
+
+            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         [HttpGet("fullnames")]
