@@ -1,0 +1,9 @@
+{
+  "exclude": [
+    "MVCDotNetAssignment.Application.Common",
+    "MVCDotNetAssignment.Application.Common",
+    "[MyProject]MyNamespace.MyOtherClass",
+    "[MyProject.Tests*]*",
+    "*/Migrations/*"
+  ]
+}

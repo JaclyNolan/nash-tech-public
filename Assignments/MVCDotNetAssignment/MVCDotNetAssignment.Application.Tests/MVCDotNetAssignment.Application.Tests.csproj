@@ -17,6 +17,11 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<!-- Include specific files or directories -->
+		<CoverletInclude>MVCDotNetAssignment.Application.Services.*</CoverletInclude>
+	</PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\MVCDotNetAssignment.BusinessLogics\MVCDotNetAssignment.Application.csproj" />
     <ProjectReference Include="..\MVCDotNetAssignment.Models\MVCDotNetAssignment.Domain.csproj" />
