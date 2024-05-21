@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\NashTech\Controllers\" />
     <Folder Include="Areas\NashTech\Data\" />
     <Folder Include="Areas\NashTech\Models\" />
   </ItemGroup>

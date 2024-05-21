@@ -20,11 +20,11 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly EmployeeServices _employeeServices;
+        private readonly IEmployeeServices _employeeServices;
         private readonly NashTechContext _context;
         private readonly IMapper _mapper;
 
-        public EmployeesController(EmployeeServices employeeServices, NashTechContext context, IMapper mapper)
+        public EmployeesController(IEmployeeServices employeeServices, NashTechContext context, IMapper mapper)
         {
             _employeeServices = employeeServices;
             _context = context;
@@ -39,15 +39,6 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
             [FromQuery(Name = "date")] string? dateString)
         {
             // Prepare the filters
-            var query = _context.Employees
-                .Include(e => e.Salary)
-                .Include(e => e.ProjectEmployees)
-                .AsQueryable(); // Start with the base query
-
-            if (SalaryAmount.HasValue)
-            {
-                query = query.Where(e => e.Salary.SalaryAmount > SalaryAmount);
-            }
             if (!dateString.IsNullOrEmpty())
             {
                 if (!DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
@@ -55,10 +46,10 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
                     // If the date string cannot be parsed, return a bad request
                     return BadRequest("Invalid date format. Use dd/MM/yyyy.");
                 }
-                query = query.Where(e => e.JoinedDate.Date >= date.Date); // Filter by date
+                return await _employeeServices.GetEmployeesAsync(SalaryAmount, date);
             }
-            var employees = await query.ToListAsync();
-            return _mapper.Map<List<EmployeeViewModel>>(employees);
+
+            return await _employeeServices.GetEmployeesAsync(SalaryAmount, null);
         }
 
         [HttpGet("with-department-names")]

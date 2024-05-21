@@ -11,26 +11,16 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
-	<PropertyGroup>
-		<!-- Include specific files or directories -->
-		<CoverletInclude>MVCDotNetAssignment.WebApp.Controllers.*</CoverletInclude>
-	</PropertyGroup>
-
-
-	<ItemGroup>
-    <ProjectReference Include="..\MVCDotNetAssignment.BusinessLogics\MVCDotNetAssignment.Application.csproj" />
-    <ProjectReference Include="..\MVCDotNetAssignment.Models\MVCDotNetAssignment.Domain.csproj" />
-    <ProjectReference Include="..\MVCDotNetAssignment.WebApp\MVCDotNetAssignment.WebApp.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\EF_Core_Assignment1.Application\EF_Core_Assignment1.Application.csproj" />
+    <ProjectReference Include="..\EF_Core_Assignment1.Domain\EF_Core_Assignment1.Domain.csproj" />
+    <ProjectReference Include="..\EF_Core_Assignment1.WebAPI\EF_Core_Assignment1.WebAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
