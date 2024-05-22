@@ -1,19 +1,22 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import Welcome from './components/Welcome'
 import Counter from './components/Counter'
 import Checkbox from './components/Checkbox'
+import Pokemon from './components/Pokemon'
 
-function App() {
+const App: FC = () => {
   const [option, setOption] = useState("Welcome");
 
   const renderComponent = (option: string) => {
     switch (option) {
       case "Welcome":
-        return <Welcome/>
+        return <Welcome />
       case "Counter":
-        return <Counter/>
+        return <Counter />
       case "Checkboxes":
-        return <Checkbox/>
+        return <Checkbox />
+      case "Pokemon":
+        return <Pokemon id={1} />
       default:
         return null; // Handle default case
     }
@@ -21,12 +24,13 @@ function App() {
 
   return (
     <>
-      <select name='option' onChange={(e) => setOption(e.target.value)}>
-        <option value="Welcome" selected>Welcome</option>
+      <select name='option' onChange={(e) => setOption(e.target.value)} defaultValue={"Welcome"}>
+        <option value="Welcome">Welcome</option>
         <option value="Counter">Counter</option>
         <option value="Checkboxes">Checkboxes</option>
+        <option value="Pokemon">Pokemon</option>
       </select>
-
+      <div>Option selected: {option}</div>
       {renderComponent(option)}
     </>
   )
