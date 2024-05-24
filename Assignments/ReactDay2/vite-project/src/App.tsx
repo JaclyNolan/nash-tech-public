@@ -3,6 +3,7 @@ import Welcome from './components/Welcome'
 import Counter from './components/Counter'
 import Checkbox from './components/Checkbox'
 import Pokemon from './components/Pokemon'
+import ListComponent from './components/List'
 
 const App: FC = () => {
   const [option, setOption] = useState("Welcome");
@@ -17,6 +18,8 @@ const App: FC = () => {
         return <Checkbox />
       case "Pokemon":
         return <Pokemon id={1} />
+      case "List":
+        return <ListComponent />
       default:
         return null; // Handle default case
     }
@@ -25,10 +28,9 @@ const App: FC = () => {
   return (
     <>
       <select name='option' onChange={(e) => setOption(e.target.value)} defaultValue={"Welcome"}>
-        <option value="Welcome">Welcome</option>
-        <option value="Counter">Counter</option>
-        <option value="Checkboxes">Checkboxes</option>
-        <option value="Pokemon">Pokemon</option>
+        {["Welcome", "Counter", "Checkboxes", "Pokemon", "List"].map(item => {
+          return (<option key={item} value={item}>{item}</option>)
+        })}
       </select>
       <div>Option selected: {option}</div>
       {renderComponent(option)}
