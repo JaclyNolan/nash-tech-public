@@ -13,6 +13,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EF_Core_Assignment1.WebAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 
 
         // GET: api/Employees
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<EmployeeViewModel>>> GetEmployees(
             [FromQuery] float? SalaryAmount,
             [FromQuery(Name = "date")] string? dateString)

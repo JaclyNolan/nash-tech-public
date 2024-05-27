@@ -25,7 +25,7 @@ namespace EF_Core_Assignment1.WebAPI.Extensions
                 try
                 {
                     var context = services.GetRequiredService<NashTechContext>();
-                    NashTechSeeder.SeederAsync(context);
+                    NashTechSeeder.Seed(context);
                 }
                 catch (Exception ex)
                 {

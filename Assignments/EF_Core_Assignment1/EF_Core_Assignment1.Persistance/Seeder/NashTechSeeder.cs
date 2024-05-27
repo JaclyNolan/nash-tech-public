@@ -11,7 +11,7 @@ namespace EF_Core_Assignment1.Persistance.Seeder
 {
     public static class NashTechSeeder
     {
-        public static void SeederAsync(this NashTechContext _context)
+        public static void Seed(this NashTechContext _context)
         {
             if (_context.Departments.Any() || _context.Employees.Any() || _context.Projects.Any() || _context.Salaries.Any())
             {
@@ -87,6 +87,4 @@ namespace EF_Core_Assignment1.Persistance.Seeder
         //        .RuleFor(e => e.)
         //}
     }
-
-
 }

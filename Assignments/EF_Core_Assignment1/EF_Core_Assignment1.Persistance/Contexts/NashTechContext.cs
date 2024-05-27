@@ -1,15 +1,13 @@
 ﻿using EF_Core_Assignment1.Domain.Common;
 using EF_Core_Assignment1.Domain.Entities;
+using EF_Core_Assignment1.Persistance.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EF_Core_Assignment1.Persistance.Contexts
 {
-    public class NashTechContext : DbContext
+    public class NashTechContext : IdentityDbContext<IdentityUser>
     {
         //public NashTechContext() : base()
         //{
@@ -31,6 +29,7 @@ namespace EF_Core_Assignment1.Persistance.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             // Configure one-to-many relationship between Department and Employee
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Department)
