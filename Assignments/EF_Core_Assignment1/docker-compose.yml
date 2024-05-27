@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: EF_Core_Assignment1.WebAPI/Dockerfile
     ports:
-      - "5000:80"
+      - "5000:8080"
     depends_on:
       - sql-server
     networks:
