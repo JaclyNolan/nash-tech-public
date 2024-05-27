@@ -5,9 +5,9 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, FormContr
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from './../../shared/components/iconify';
-import { URLConstants } from '../../common/Constants';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../contexts/AuthContext';
+import { URLConstants } from '../../common/constants';
 
 // ----------------------------------------------------------------------
 

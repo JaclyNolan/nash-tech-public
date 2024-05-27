@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Box, Link } from '@mui/material';
+import { routeNames } from './../../../routesConstants';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   }
 
   return (
-    <Link to="/" component={RouterLink} sx={{ display: 'contents' }}>
+    <Link to={routeNames.index} component={RouterLink} sx={{ display: 'contents' }}>
       {logo}
     </Link>
   );

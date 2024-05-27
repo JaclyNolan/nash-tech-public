@@ -19,11 +19,6 @@ export interface UserCredential {
     refreshToken: string
 }
 
-// enum Role {
-//     admin = "admin",
-//     user = "user"
-// }
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // AuthProvider component to provide AuthContext to children

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { AxiosConstants, LocalStorageConstants } from "./common/Constants";
 import { UserCredential } from './contexts/AuthContext';
+import { AxiosConstants, LocalStorageConstants } from "./common/constants";
 
 const axiosInstance = axios.create({
     baseURL: AxiosConstants.AXIOS_BASEURL,

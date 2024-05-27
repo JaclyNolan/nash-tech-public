@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import NoStyleLink from "../NoStyleLink";
 import { useNavigate } from "react-router-dom";
+import { routeNames } from "../../../routesConstants";
 
 const pages = ['Home', 'Posts', 'Book'];
 const settings = ['Profile', 'Account', 'Dashboard'];
@@ -31,7 +32,7 @@ const Navbar: FC = () => {
     const handleLogout = () => {
         setUser(null)
         setUserCredential(null)
-        return navigate('/login')
+        return navigate(routeNames.login)
     }
 
     const renderAvatar = () => {
@@ -72,7 +73,7 @@ const Navbar: FC = () => {
 
         return (
             <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
-                <NoStyleLink to={"/login"} style={{ textDecoration: 'none' }}>
+                <NoStyleLink to={routeNames.login} style={{ textDecoration: 'none' }}>
                     <Button sx={{ my: 2, color: 'white', display: 'block' }}>
                         Login
                     </Button>

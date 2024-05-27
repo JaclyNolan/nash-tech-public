@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { routeNames } from '../../routesConstants';
 
 const RequireGuest = () => {
     const { user } = useAuth();
     return (
         !user
             ? <Outlet />
-            : <Navigate to="/" replace />
+            : <Navigate to={routeNames.index} replace />
     )
 }
 
