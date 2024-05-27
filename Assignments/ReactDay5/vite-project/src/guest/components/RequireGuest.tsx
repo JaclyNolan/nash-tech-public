@@ -3,9 +3,6 @@ import { useAuth } from '../../contexts/AuthContext';
 
 const RequireGuest = () => {
     const { user } = useAuth();
-
-    console.log(user);
-
     return (
         !user
             ? <Outlet />

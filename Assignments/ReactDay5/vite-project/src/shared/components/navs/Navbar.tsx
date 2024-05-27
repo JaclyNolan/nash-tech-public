@@ -1,14 +1,15 @@
 import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
-import { Link } from "react-router-dom";
 import NoStyleLink from "../NoStyleLink";
+import { useNavigate } from "react-router-dom";
 
 const pages = ['Home', 'Posts', 'Book'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar: FC = () => {
-    const {user} = useAuth();
+    const navigate = useNavigate();
+    const {user, setUser, setUserCredential} = useAuth();
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -26,6 +27,12 @@ const Navbar: FC = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleLogout = () => {
+        setUser(null)
+        setUserCredential(null)
+        return navigate('/login')
+    }
 
     const renderAvatar = () => {
         if (user) {
@@ -56,6 +63,9 @@ const Navbar: FC = () => {
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     ))}
+                    <MenuItem key="Logout" onClick={handleLogout}>
+                            <Typography textAlign="center">Logout</Typography>
+                        </MenuItem>
                 </Menu>
             </Box>)
         }
