@@ -2,18 +2,16 @@
 using EF_Core_Assignment1.Domain.Entities;
 using EF_Core_Assignment1.Persistance.Contexts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace EF_Core_Assignment1.Persistance.Seeder
 {
     public static class NashTechSeeder
     {
+        //private readonly UserManager<ApplicationUser> _userManager;
         public static void Seed(this NashTechContext _context)
         {
-            if (_context.Departments.Any() || _context.Employees.Any() || _context.Projects.Any() || _context.Salaries.Any())
+            if (_context.Departments.Any() || _context.Employees.Any() || _context.Projects.Any() || _context.Salaries.Any() || _context.Books.Any())
             {
                 Console.WriteLine("Database already seeded");
                 // Data already seeded
@@ -59,32 +57,40 @@ namespace EF_Core_Assignment1.Persistance.Seeder
             _context.SaveChanges();
 
             // Seed ProjectEmployees
-            var projectEmployeeFaker = new Faker<ProjectEmployee>()
-                .RuleFor(pe => pe.ProjectId, f => f.PickRandom(projects).Id)
-                .RuleFor(pe => pe.EmployeeId, f => f.PickRandom(employees).Id)
-                .RuleFor(pe => pe.Enable, f => f.Random.Bool());
+            var projectEmployees = new List<ProjectEmployee>();
+            var random = new Random();
+            foreach (var employee in employees)
+            {
+                var numberOfProjects = random.Next(1, 4); // Random number between 1 and 2
 
-            var projectEmployees = projectEmployeeFaker.Generate(30); // Generate 30 project employees
+                // Shuffle the projects list
+                var shuffledProjects = projects.OrderBy(p => random.Next()).ToList();
+
+                for (int i = 0; i < numberOfProjects; i++)
+                {
+                    var projectEmployee = new ProjectEmployee
+                    {
+                        ProjectId = shuffledProjects[i].Id,
+                        EmployeeId = employee.Id,
+                        Enable = new Faker().Random.Bool()
+                    };
+
+                    projectEmployees.Add(projectEmployee);
+                }
+            }
+
             _context.ProjectEmployees.AddRange(projectEmployees);
             _context.SaveChanges();
 
-            var salaries = salaryFaker.Generate(15); // Generate 15 salaries
-            _context.Salaries.AddRange(salaries);
+            // Seed Book
+            var bookFaker = new Faker<Book>()
+                .RuleFor(b => b.Name, f => f.Commerce.ProductName())
+                .RuleFor(b => b.Description, f => f.Lorem.Paragraph());
+            var books = bookFaker.Generate(10);
+            _context.Books.AddRange(books);
             _context.SaveChanges();
+
             Console.WriteLine("Database seeded successfully");
         }
-
-        //private List<Department> GenerateDepartments()
-        //{
-            
-        //    return departments;
-        //}
-        //private List<Employee> GenerateEmployees(int count)
-        //{
-        //    var faker = new Faker<Employee>()
-        //        .RuleFor(e => e.Name, f => f.Person.FullName)
-        //        .RuleFor(e => e.JoinedDate, f => f.Date.Between(DateTime.Parse("1/1/2020"), DateTime.Now))
-        //        .RuleFor(e => e.)
-        //}
     }
 }

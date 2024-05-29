@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import NoStyleLink from "../NoStyleLink";
@@ -10,7 +10,7 @@ const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar: FC = () => {
     const navigate = useNavigate();
-    const {user, setUser, setUserCredential} = useAuth();
+    const { user, setUser, setUserCredential } = useAuth();
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -37,7 +37,7 @@ const Navbar: FC = () => {
 
     const renderAvatar = () => {
         if (user) {
-            return(<Box sx={{ flexGrow: 0 }}>
+            return (<Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -59,14 +59,19 @@ const Navbar: FC = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                 >
+                    <MenuItem disableRipple>
+                        <Typography textAlign="center">{user.email}</Typography>
+                    </MenuItem>
+
+                    <Divider variant="middle" component="menu" />
                     {settings.map((setting) => (
                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     ))}
                     <MenuItem key="Logout" onClick={handleLogout}>
-                            <Typography textAlign="center">Logout</Typography>
-                        </MenuItem>
+                        <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
                 </Menu>
             </Box>)
         }

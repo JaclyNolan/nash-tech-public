@@ -1,11 +1,14 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import React, { lazy } from 'react';
+import { RouteObject, useRoutes } from 'react-router-dom';
 import Login from './guest/pages/Login';
 import RequireGuest from './guest/components/RequireGuest';
 import HomeLayout from './shared/layouts/HomeLayout';
 import Home from './shared/pages/Home';
 import NotFound from './guest/pages/NotFound';
 import { routeNames } from './routesConstants';
+import BookList from './user/pages/BookPages/BookList';
+
+// const Login = lazy(() => import('./guest/pages/Login'))
 
 const commonRoutes: RouteObject[] = [
     {
@@ -23,6 +26,10 @@ const commonRoutes: RouteObject[] = [
             {
                 path: routeNames.index,
                 element: <Home/>
+            },
+            {
+                path: routeNames.bookList,
+                element: <BookList/>
             }
         ]
     },

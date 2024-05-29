@@ -6,6 +6,12 @@ export const AxiosConstants = {
 
 export const URLConstants = {
     LOGIN_ENDPOINT: "/login",
+    BOOK_GETALL: "/api/book",
+    BOOK_GETID: "/api/book/:id",
+    BOOK_SEARCH: "/api/book/search",
+    BOOK_ADD: "/api/book",
+    BOOK_UPDATE: "/api/book",
+    BOOK_DELETE: "/api/book"
 }
 
 export const LocalStorageConstants = {

@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
+using EF_Core_Assignment1.Application.DTOs.Book;
+using EF_Core_Assignment1.Application.DTOs.Common;
 using EF_Core_Assignment1.Application.DTOs.Department;
 using EF_Core_Assignment1.Application.DTOs.Employee;
 using EF_Core_Assignment1.Application.DTOs.Project;
 using EF_Core_Assignment1.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EF_Core_Assignment1.Application.Mapper
 {
@@ -35,6 +32,11 @@ namespace EF_Core_Assignment1.Application.Mapper
                 .ForMember(dest => dest.EmployeeIds, opt => opt.MapFrom(src => src.Employees.Select(e => e.Id)));
             CreateMap<ProjectCreateRequest, Project>();
             CreateMap<ProjectEditRequest, Project>();
+
+            // Book
+            CreateMap<CreateBookRequest, Book>();
+            CreateMap<UpdateBookRequest, Book>();
+            CreateMap<Book, BookViewModel>();
         }
     }
 }

@@ -15,12 +15,18 @@
     "@iconify/react": "^4.1.1",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
+    "antd": "^5.17.4",
     "axios": "^1.7.2",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1"
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^6.23.1",
+    "react-scrollbars-custom": "^4.1.1",
+    "simplebar-react": "^3.2.5"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.4",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

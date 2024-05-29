@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EF_Core_Assignment1.Persistance.Contexts;
 using EF_Core_Assignment1.Application.DTOs.Employee;
 using EF_Core_Assignment1.Application.Services;
 using EF_Core_Assignment1.Domain.Entities;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;

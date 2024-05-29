@@ -1,8 +1,14 @@
 import { FC } from "react";
+import { Helmet } from "react-helmet-async";
 
 const Home: FC = () => {
     return (
-        <div>This is Home</div>
+        <>
+            <Helmet>
+                <title>Home</title>
+            </Helmet>
+            <div>This is Home</div>
+        </>
     )
 }
 

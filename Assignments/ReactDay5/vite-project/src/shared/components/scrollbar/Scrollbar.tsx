@@ -1,18 +1,15 @@
-import PropTypes from 'prop-types';
-import { memo } from 'react';
-// @mui
-import { Box } from '@mui/material';
-//
+import { CSSProperties, ReactNode, memo } from 'react';
+import { Box, BoxProps } from '@mui/material';
 import { StyledRootScrollbar, StyledScrollbar } from './styles';
 
-// ----------------------------------------------------------------------
+interface ScrollbarProps {
+  sx?: CSSProperties;
+  children?: ReactNode;
+  timeout?: number;
+  clickOnTrack?: boolean;
+}
 
-Scrollbar.propTypes = {
-  sx: PropTypes.object,
-  children: PropTypes.node,
-};
-
-function Scrollbar({ children, sx, ...other }) {
+function Scrollbar({ children, sx, clickOnTrack = false, ...other }: ScrollbarProps & BoxProps) {
   const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -27,7 +24,7 @@ function Scrollbar({ children, sx, ...other }) {
 
   return (
     <StyledRootScrollbar>
-      <StyledScrollbar timeout={500} clickOnTrack={false} sx={sx} {...other}>
+      <StyledScrollbar clickOnTrack={clickOnTrack} sx={sx} {...other}>
         {children}
       </StyledScrollbar>
     </StyledRootScrollbar>

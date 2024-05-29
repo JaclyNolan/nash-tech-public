@@ -26,6 +26,7 @@ namespace EF_Core_Assignment1.Persistance.Contexts
         public DbSet<Project> Projects { get; set; }
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

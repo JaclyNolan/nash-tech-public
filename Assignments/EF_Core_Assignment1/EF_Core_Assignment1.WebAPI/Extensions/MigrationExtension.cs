@@ -22,15 +22,24 @@ namespace EF_Core_Assignment1.WebAPI.Extensions
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
+                var logger = services.GetRequiredService<ILogger<Program>>();
+
+                var context = services.GetRequiredService<NashTechContext>();
+                // Begin transaction
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    var context = services.GetRequiredService<NashTechContext>();
-                    NashTechSeeder.Seed(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding the database.");
+                    try
+                    {
+                        NashTechSeeder.Seed(context);
+                        // Commit transaction if seeding is successful
+                        transaction.Commit();
+                    }
+                    catch (Exception seedingEx)
+                    {
+                        // Rollback transaction if an error occurs during seeding
+                        transaction.Rollback();
+                        logger.LogError(seedingEx, "An error occurred while seeding the database. Rolling back seeding operation.");
+                    }
                 }
             }
             return host;

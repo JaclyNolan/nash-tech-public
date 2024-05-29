@@ -1,6 +1,8 @@
 import axios from "axios";
 import { UserCredential } from './contexts/AuthContext';
 import { AxiosConstants, LocalStorageConstants } from "./common/constants";
+import { useNavigate } from "react-router-dom";
+import { routeNames } from "./routesConstants";
 
 const axiosInstance = axios.create({
     baseURL: AxiosConstants.AXIOS_BASEURL,
@@ -36,10 +38,12 @@ axiosInstance.interceptors.response.use(
         return response
     },
     error => {
+        const navigate = useNavigate()
         // Any status codes that fall outside the range of 2xx cause this function to trigger
         if (error.response && error.response.status === 401) {
             // Handle unauthorized errors (e.g., redirect to login)
             console.error('Unauthorized, redirecting to login...');
+            return navigate(routeNames.login);
         }
         // You can add other error handling logic here
 
