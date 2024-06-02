@@ -9,11 +9,11 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
 
-        public BookController(IBookService bookService)
+        public BooksController(IBookService bookService)
         {
             _bookService = bookService;
         }
@@ -27,8 +27,8 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
             var paginatedResult = new PaginatedResult<BookViewModel>
             {
                 Data = books,
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize,
+                PageNumber = request.Page,
+                PageSize = request.PerPage,
                 TotalCount = totalCount
             };
 

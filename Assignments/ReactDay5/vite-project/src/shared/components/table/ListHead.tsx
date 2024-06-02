@@ -15,11 +15,11 @@ const visuallyHidden: React.CSSProperties = {
   clip: 'rect(0 0 0 0)',
 };
 
-interface HeadLabel {
+export interface HeadLabel {
   id: string;
   label: string;
   alignRight?: boolean;
-  orderable: boolean;
+  orderable?: boolean;
   [key: string]: any;
 }
 
@@ -29,7 +29,7 @@ interface ListHeadProps {
   rowCount: number;
   headLabel: HeadLabel[];
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: HeadLabel) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -42,7 +42,7 @@ const ListHead: React.FC<ListHeadProps> = ({
   onRequestSort,
   onSelectAllClick,
 }) => {
-  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: HeadLabel) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -69,7 +69,7 @@ const ListHead: React.FC<ListHeadProps> = ({
                 hideSortIcon
                 active={orderable}
                 direction={orderBy === id ? order : 'asc'}
-                onClick={createSortHandler(id)}
+                onClick={createSortHandler(headCell)}
               >
                 {label}
                 {orderBy === headCell.id ? (

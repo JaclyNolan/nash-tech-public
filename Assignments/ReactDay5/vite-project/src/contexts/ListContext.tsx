@@ -3,7 +3,7 @@ import React, { createContext, useState, ReactNode, useContext } from 'react';
 
 interface FetchData {
   current_page: number;
-  data: Topic[];
+  data: Object[];
   first_page_url: string;
   from: number;
   last_page: number;
@@ -41,7 +41,7 @@ interface ListContextProps {
 const ListContext = createContext<ListContextProps | undefined>(undefined);
 
 export const ListProvider = ({ children }: { children: ReactNode }) => {
-  const [openEntry, setOpenEntry] = useState<Topic | null>(null);
+  const [openEntry, setOpenEntry] = useState<Object | null>(null);
   const [page, setPage] = useState<number>(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selected, setSelected] = useState<number[]>([]);
@@ -62,5 +62,8 @@ export const ListProvider = ({ children }: { children: ReactNode }) => {
         setOrder,
         selected,
         setSelected,
-        orderBy,
-     
+        orderBy,}}>
+
+        </ListContext.Provider>
+  )
+}

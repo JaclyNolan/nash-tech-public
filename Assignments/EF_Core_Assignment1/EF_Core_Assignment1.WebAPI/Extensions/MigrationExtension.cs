@@ -17,7 +17,7 @@ namespace EF_Core_Assignment1.WebAPI.Extensions
             return host;
         }
 
-        public static IHost SeedDatabase(this IHost host)
+        public static async Task<IHost> SeedDatabase(this IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -30,7 +30,8 @@ namespace EF_Core_Assignment1.WebAPI.Extensions
                 {
                     try
                     {
-                        NashTechSeeder.Seed(context);
+                        await context.Seed(services);
+                        
                         // Commit transaction if seeding is successful
                         transaction.Commit();
                     }

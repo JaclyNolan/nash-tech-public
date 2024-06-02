@@ -26,16 +26,16 @@ namespace EF_Core_Assignment1.Persistance.Repositories
             // Apply search filter only for name
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(b => b.Name.Contains(search));
+                query = query.Where(b => b.Title.Contains(search));
             }
 
             // Apply sorting
             switch (sortField.ToLower())
             {
-                case "name":
+                case "title":
                     query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(b => b.Name)
-                        : query.OrderBy(b => b.Name);
+                        ? query.OrderByDescending(b => b.Title)
+                        : query.OrderBy(b => b.Title);
                     break;
                 case "datecreated":
                     query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
@@ -67,7 +67,7 @@ namespace EF_Core_Assignment1.Persistance.Repositories
         public async Task<IEnumerable<Book>> SearchBooksAsync(string searchString)
         {
             return await _context.Books
-                .Where(b => b.Name.Contains(searchString))
+                .Where(b => b.Title.Contains(searchString))
                 .ToListAsync();
         }
 

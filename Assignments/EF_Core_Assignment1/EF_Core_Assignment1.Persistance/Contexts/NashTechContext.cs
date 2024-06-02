@@ -4,34 +4,71 @@ using EF_Core_Assignment1.Persistance.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace EF_Core_Assignment1.Persistance.Contexts
 {
-    public class NashTechContext : IdentityDbContext<IdentityUser>
+    public class NashTechContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
-        //public NashTechContext() : base()
-        //{
-        //}
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Server=localhost;Database=nashtech;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
-        //    base.OnConfiguring(optionsBuilder);
-        //}
         public NashTechContext(DbContextOptions<NashTechContext> options) : base(options)
         {
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<BookBorrowingRequest> BookBorrowingRequests { get; set; }
+        public DbSet<BookBorrowingRequestDetails> BookBorrowingRequestDetails { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
+
+            builder.Entity<Book>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Books)
+                .HasForeignKey(b => b.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+            builder.Entity<BookBorrowingRequest>()
+                .HasOne(r => r.Requestor)
+                .WithMany(u => u.RequestedBookBorrowingRequest)
+                .HasForeignKey(r => r.RequestorId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(true);
+
+            builder.Entity<BookBorrowingRequest>()
+                .HasOne(r => r.Approver)
+                .WithMany(u => u.ApprovedBookBorrowingRequest)
+                .HasForeignKey(r => r.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+            builder.Entity<BookBorrowingRequestDetails>()
+                .HasOne(d => d.BookBorrowingRequest)
+                .WithMany(r => r.BookBorrowingRequestDetails)
+                .HasForeignKey(d => d.BookBorrowingRequestId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
+
+            builder.Entity<BookBorrowingRequestDetails>()
+                .HasOne(d => d.Book)
+                .WithMany(r => r.BookBorrowingRequestDetails)
+                .HasForeignKey(d => d.BookId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(true);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateTimeStamp();
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override int SaveChanges()
+        {
+            UpdateTimeStamp();
+            return base.SaveChanges();
         }
 
         private void UpdateTimeStamp()
@@ -44,7 +81,7 @@ namespace EF_Core_Assignment1.Persistance.Contexts
             {
                 if (entity is BaseEntity baseEntity)
                 {
-                    if (baseEntity.DateCreated == null)
+                    if (baseEntity.DateCreated == default)
                     {
                         baseEntity.DateCreated = DateTime.UtcNow;
                     }

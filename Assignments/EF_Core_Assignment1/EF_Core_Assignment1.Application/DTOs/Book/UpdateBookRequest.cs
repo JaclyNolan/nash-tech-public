@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EF_Core_Assignment1.Application.DTOs.Common
+namespace EF_Core_Assignment1.Application.DTOs.Book
 {
     public class UpdateBookRequest
     {

@@ -5,6 +5,10 @@ import axiosInstance from "../../../axiosInstance";
 import Iconify from "../../../shared/components/iconify/Iconify";
 import ListTable from "../../../shared/components/table/ListTable";
 import { URLConstants } from "../../../common/constants";
+import { HeadLabel } from "../../../shared/components/table/ListHead";
+import BookAdd from "./BookAdd";
+import BookEdit from "./BookEdit";
+import { nameof } from "../../../common/helper";
 
 const style = {
     position: 'absolute',
@@ -32,74 +36,88 @@ const assignStyle = {
 
 export interface Book {
     id: string,
-    name: string,
-    description: string
+    title: string,
+    author: string,
+    description: string,
+    categoryId: string,
+    dateCreated: string
 }
 
 interface FetchData {
-    data: Book[],
+    data: Object[],
     pageNumber: number,
     pageSize: number,
     totalCount: number
 }
 
-
+export interface ListTableUseState {
+    openEntryId: string,
+    page: number,
+    order: "asc" | "desc",
+    selected: string[],
+    orderBy: string,
+    filterName: string,
+    rowsPerPage: number,
+    fetchData: FetchData | null,
+    isFetchingData: boolean,
+    editModalOpen: boolean,
+    addModalOpen: boolean,
+    assignModalOpen: boolean,
+}
 
 export default function BookList() {
-    const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
-    const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-    const [assignModalOpen, setAssignModalOpen] = useState<boolean>(false);
+    const [listTableUseStates, setListTableUseStates] = useState<ListTableUseState>({
+        openEntryId: "",
+        page: 0,
+        order: "asc",
+        orderBy: "title",
+        filterName: '',
+        rowsPerPage: 5,
+        fetchData: null,
+        isFetchingData: false,
+        editModalOpen: false,
+        addModalOpen: false,
+        assignModalOpen: false,
+        selected: []
+    });
 
-    const [openEntry, setOpenEntry] = useState<Topic | null>(null);
-
-    const [page, setPage] = useState<number>(0);
-    const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-    const [selected, setSelected] = useState<number[]>([]);
-    const [orderBy, setOrderBy] = useState<string>('name');
-    const [filterName, setFilterName] = useState<string>('');
-    const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-    const [fetchData, setFetchData] = useState<FetchData | null>(null);
-    const [isFetchingData, setFetchingData] = useState<boolean>(true);
-
-    const searchText = 'Search topic by name...';
+    const placeholderSearchText = 'Search book by name...';
     const fetchRef = useRef<number>(0);
 
-    const useStateData = {
-        page, setPage,
-        order, setOrder,
-        selected, setSelected,
-        orderBy, setOrderBy,
-        filterName, setFilterName,
-        rowsPerPage, setRowsPerPage,
-        isFetchingData, setFetchingData,
-        openEntry, setOpenEntry,
-        editModalOpen, setEditModalOpen,
-        fetchData, setFetchData
-    };
-
-    const TABLE_HEAD = [
-        { id: 'id', label: "Id", alignRight: false, orderable: true },
-        { id: 'name', label: 'Name', alignRight: false, orderable: true },
-        { id: 'description', label: 'Description', alignRight: false },
-        { id: 'created_at', label: 'Created At', alignRight: false, orderable: true },
-        { id: 'assign' },
-        { id: 'actions' },
+    const TABLE_HEAD: HeadLabel[] = [
+        { id: nameof<Book>('id'), label: "Id", alignRight: false, orderable: true },
+        { id: nameof<Book>('title'), label: 'Title', alignRight: false, orderable: true },
+        { id: nameof<Book>('author'), label: "Author", alignRight: false },
+        { id: nameof<Book>('description'), label: 'Description', alignRight: false },
+        { id: nameof<Book>('dateCreated'), label: 'Created At', alignRight: false, orderable: true },
+        { id: 'assign', label: '' },
+        { id: 'actions', label: '' },
     ];
 
-    const TABLE_ROW = (topic: Topic) => (
+    const TABLE_ROW = (book: Book) => (
         <>
-            <TableCell align="left">{topic.id}</TableCell>
-            <TableCell align="left"><Typography variant="subtitle2" noWrap>{topic.name}</Typography></TableCell>
-            <TableCell align="left">{topic.description}</TableCell>
-            <TableCell align="left">{topic.created_at}</TableCell>
+            <TableCell align="left">{book.id}</TableCell>
+            <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
+            <TableCell align="left">{book.author}</TableCell>
+            <TableCell align="left">{book.description}</TableCell>
+            <TableCell align="left">{book.dateCreated}</TableCell>
             <TableCell align="left">
-                <Button variant='outlined' onClick={() => handleAssignModalOpen(topic)}>Trainers</Button>
+                <Button variant='outlined' onClick={() => handleAssignModalOpen(book)}>Trainers</Button>
             </TableCell>
         </>
     );
 
-    const fetchTopicData = async () => {
+    const setFetchingData = (isFetching: boolean) => {
+        setListTableUseStates((prevState) => ({ ...prevState, isFetchingData: isFetching }));
+    };
+
+    const setFetchData = (data: FetchData) => {
+        setListTableUseStates((prevState) => ({ ...prevState, fetchData: data }));
+    };
+
+    const fetchBookData = async () => {
         setFetchingData(true);
+        const { page, order, orderBy, filterName, rowsPerPage } = listTableUseStates;
         const pagePlusOne = page + 1;
         const params = {
             page: pagePlusOne,
@@ -110,96 +128,96 @@ export default function BookList() {
         };
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
-        const response = await axiosInstance.get(URLConstants.STAFF_TOPIC_INDEX_ENDPOINT, { params });
+        const response = await axiosInstance.get(URLConstants.BOOK.GETALL, { params });
         if (fetchId !== fetchRef.current) return;
         setFetchData(response.data);
         setFetchingData(false);
     };
 
-    const deleteTopic = async (id: number) => {
+    const handleDeleteBook = async (id: string) => {
         setFetchingData(true);
-        const response = await axiosInstance.delete(URLConstants.STAFF_TOPIC_DELETE_ENDPOINT.concat(`/${id}`));
+        const response = await axiosInstance.delete(`${URLConstants.BOOK.DELETE}/${id}`);
         return response;
     };
 
     const refreshTable = () => {
-        if (page === 0) fetchTopicData();
-        else setPage(0);
+        if (listTableUseStates.page === 0) fetchBookData();
+        else setListTableUseStates((prevState) => ({ ...prevState, page: 0 }));
     };
 
-    const handleAddModalOpen = () => setAddModalOpen(true);
-    const handleAddModalClose = () => setAddModalOpen(false);
-    const handleEditModalClose = () => setEditModalOpen(false);
+    const handleAddModalOpen = () => setListTableUseStates((prevState) => ({ ...prevState, addModalOpen: true }));
+    const handleAddModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, addModalOpen: false }));
+    const handleEditModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, editModalOpen: false }));
 
-    const handleAssignModalOpen = (entry: Topic) => {
-        setOpenEntry(entry);
-        setAssignModalOpen(true);
+    const handleAssignModalOpen = (entry: Book) => {
+        setListTableUseStates((prevState) => ({ ...prevState, openEntry: entry, assignModalOpen: true }));
     };
-    const handleAssignModalClose = () => setAssignModalOpen(false);
+    const handleAssignModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, assignModalOpen: false }));
 
     useEffect(() => {
-        fetchTopicData();
-    }, [page, orderBy, order, filterName, rowsPerPage]);
+        fetchBookData();
+    }, [listTableUseStates.page, listTableUseStates.orderBy, listTableUseStates.order, listTableUseStates.filterName, listTableUseStates.rowsPerPage]);
 
     return (
         <>
             <Helmet>
-                <title> Topic Management </title>
+                <title> Book Management </title>
             </Helmet>
 
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Topic Management
+                        Book Management
                     </Typography>
                     <Button onClick={handleAddModalOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                        New Topic
+                        New Book
                     </Button>
                 </Stack>
                 <ListTable
                     TABLE_HEAD={TABLE_HEAD}
                     TABLE_ROW={TABLE_ROW}
-                    useStateData={useStateData}
-                    searchText={searchText}
-                    deleteEntry={deleteTopic}
+                    listTableUseStates={listTableUseStates}
+                    setListTableUseStates={setListTableUseStates}
+                    searchText={placeholderSearchText}
+                    handleDeleteEntry={handleDeleteBook}
                     refreshTable={refreshTable}
                 />
             </Container>
             <Modal
                 key='add'
-                open={addModalOpen}
+                open={listTableUseStates.addModalOpen}
                 onClose={handleAddModalClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <TopicAdd fetchList={fetchTopicData} />
+                    <BookAdd fetchList={fetchBookData} />
                 </Box>
             </Modal>
 
             <Modal
                 key='edit'
-                open={editModalOpen}
+                open={listTableUseStates.editModalOpen}
                 onClose={handleEditModalClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <TopicEdit fetchList={fetchTopicData} entry={openEntry} />
+                    <BookEdit fetchList={fetchBookData} entryId={listTableUseStates.openEntryId} />
                 </Box>
             </Modal>
 
-            <Modal
+            {/* <Modal
                 key='assign'
-                open={assignModalOpen}
+                open={listTableUseStates.assignModalOpen}
                 onClose={handleAssignModalClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={assignStyle}>
-                    <TopicTrainerAssign fetchList={fetchTopicData} entry={openEntry} />
+                    <BookTrainerAssign fetchList={fetchBookData} entry={listTableUseStates.openEntryId} />
                 </Box>
-            </Modal>
+            </Modal> */}
         </>
     );
 }

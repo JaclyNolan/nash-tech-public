@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EF_Core_Assignment1.Application.DTOs.Book;
-using EF_Core_Assignment1.Application.DTOs.Common;
 using EF_Core_Assignment1.Domain.Entities;
 using EF_Core_Assignment1.Persistance.Repositories;
 using Microsoft.Data.SqlClient;
@@ -37,8 +36,8 @@ namespace EF_Core_Assignment1.Application.Services
         public async Task<(IEnumerable<BookViewModel>, int totalCount)> GetAllBooksAsync(GetAllBookRequest request)
         {
             var (books, totalCount) = await _bookRepository.GetBooksAsync(
-                request.PageNumber,
-                request.PageSize,
+                request.Page,
+                request.PerPage,
                 request.SortField.ToString(),
                 request.SortOrder.ToString(),
                 request.Search);
