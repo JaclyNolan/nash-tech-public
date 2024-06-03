@@ -4,18 +4,13 @@ import { CSSProperties } from 'react';
 
 // ----------------------------------------------------------------------
 
-interface StyledScrollbarProps {
-  theme?: any; // Adjust the type of the theme according to your theme setup
-  sx?: CSSProperties;
-}
-
 export const StyledRootScrollbar = styled('div')(() => ({
   flexGrow: 1,
   height: '100%',
   overflow: 'hidden',
 }));
 
-export const StyledScrollbar = styled(SimpleBar)<StyledScrollbarProps>(({ theme }) => ({
+export const StyledScrollbar = styled(SimpleBar)<any>(({ theme }) => ({
   maxHeight: '100%',
   '& .simplebar-scrollbar': {
     '&:before': {
@@ -33,5 +28,8 @@ export const StyledScrollbar = styled(SimpleBar)<StyledScrollbarProps>(({ theme 
   },
   '& .simplebar-mask': {
     zIndex: 'inherit',
+  },
+  '& .simplebar-placeholder': {
+    display: 'none',
   },
 }));

@@ -35,7 +35,9 @@ builder.Services.AddDbContext<NashTechContext>(opt =>
 });
 
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddAutoMapper(typeof(NashTechProfile).Assembly);
 
 builder.Services.AddAuthorization();

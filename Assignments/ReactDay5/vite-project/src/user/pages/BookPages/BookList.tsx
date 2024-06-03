@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Box, Button, Container, Modal, Stack, TableCell, Typography } from '@mui/material';
 import axiosInstance from "../../../axiosInstance";
@@ -43,8 +43,8 @@ export interface Book {
     dateCreated: string
 }
 
-interface FetchData {
-    data: Object[],
+export interface FetchData<T> {
+    data: T[],
     pageNumber: number,
     pageSize: number,
     totalCount: number
@@ -58,14 +58,25 @@ export interface ListTableUseState {
     orderBy: string,
     filterName: string,
     rowsPerPage: number,
-    fetchData: FetchData | null,
+    fetchData: FetchData<Book> | null,
     isFetchingData: boolean,
     editModalOpen: boolean,
     addModalOpen: boolean,
     assignModalOpen: boolean,
 }
 
-export default function BookList() {
+const TABLE_ROW = (book: Book) => (
+    <>
+        <TableCell align="left">{book.id}</TableCell>
+        <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
+        <TableCell align="left">{book.author}</TableCell>
+        <TableCell align="left">{book.description}</TableCell>
+        <TableCell align="left">{book.dateCreated}</TableCell>
+        <TableCell align="left">{book.categoryId}</TableCell>
+    </>
+);
+
+const BookList:FC = () => {
     const [listTableUseStates, setListTableUseStates] = useState<ListTableUseState>({
         openEntryId: "",
         page: 0,
@@ -81,7 +92,7 @@ export default function BookList() {
         selected: []
     });
 
-    const placeholderSearchText = 'Search book by name...';
+    const placeholderSearchText = 'Search book by title...';
     const fetchRef = useRef<number>(0);
 
     const TABLE_HEAD: HeadLabel[] = [
@@ -90,28 +101,15 @@ export default function BookList() {
         { id: nameof<Book>('author'), label: "Author", alignRight: false },
         { id: nameof<Book>('description'), label: 'Description', alignRight: false },
         { id: nameof<Book>('dateCreated'), label: 'Created At', alignRight: false, orderable: true },
-        { id: 'assign', label: '' },
-        { id: 'actions', label: '' },
+        { id: nameof<Book>('categoryId'), label: 'Category Id', alignRight: false },
+        { id: 'actions', label: 'Action' },
     ];
-
-    const TABLE_ROW = (book: Book) => (
-        <>
-            <TableCell align="left">{book.id}</TableCell>
-            <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
-            <TableCell align="left">{book.author}</TableCell>
-            <TableCell align="left">{book.description}</TableCell>
-            <TableCell align="left">{book.dateCreated}</TableCell>
-            <TableCell align="left">
-                <Button variant='outlined' onClick={() => handleAssignModalOpen(book)}>Trainers</Button>
-            </TableCell>
-        </>
-    );
 
     const setFetchingData = (isFetching: boolean) => {
         setListTableUseStates((prevState) => ({ ...prevState, isFetchingData: isFetching }));
     };
 
-    const setFetchData = (data: FetchData) => {
+    const setFetchData = (data: FetchData<Book>) => {
         setListTableUseStates((prevState) => ({ ...prevState, fetchData: data }));
     };
 
@@ -149,8 +147,8 @@ export default function BookList() {
     const handleAddModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, addModalOpen: false }));
     const handleEditModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, editModalOpen: false }));
 
-    const handleAssignModalOpen = (entry: Book) => {
-        setListTableUseStates((prevState) => ({ ...prevState, openEntry: entry, assignModalOpen: true }));
+    const handleAssignModalOpen = (entryId: string) => {
+        setListTableUseStates((prevState) => ({ ...prevState, openEntryId: entryId, assignModalOpen: true }));
     };
     const handleAssignModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, assignModalOpen: false }));
 
@@ -221,3 +219,5 @@ export default function BookList() {
         </>
     );
 }
+
+export default BookList

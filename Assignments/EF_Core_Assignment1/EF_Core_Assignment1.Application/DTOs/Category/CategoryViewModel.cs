@@ -10,6 +10,6 @@ namespace EF_Core_Assignment1.Application.DTOs.Category
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset DateCreated { get; set; }
     }
 }

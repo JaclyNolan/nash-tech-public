@@ -8,7 +8,7 @@ namespace EF_Core_Assignment1.Application.DTOs.Category
         public int PageSize { get; set; } = 10;
         public CategorySortField SortField { get; set; } = CategorySortField.Name;
         public SortOrder SortOrder { get; set; } = SortOrder.Asc;
-        public string Search { get; set; } = string.Empty;
+        public string? Search { get; set; }
     }
 
     public enum CategorySortField

@@ -5,7 +5,16 @@ import NoStyleLink from "../NoStyleLink";
 import { useNavigate } from "react-router-dom";
 import { routeNames } from "../../../routesConstants";
 
-const pages = ['Home', 'Posts', 'Book'];
+const pages = [
+    {
+        name: 'Home',
+        to: routeNames.index,
+    },
+    {
+        name: 'Book',
+        to: routeNames.bookList,
+    },
+]
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar: FC = () => {
@@ -146,9 +155,11 @@ const Navbar: FC = () => {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
+                                <NoStyleLink key={page.name} to={page.to}>
+                                    <MenuItem onClick={handleCloseNavMenu}>
+                                        <Typography textAlign="center">{page.name}</Typography>
+                                    </MenuItem>
+                                </NoStyleLink>
                             ))}
                         </Menu>
                     </Box>
@@ -173,13 +184,14 @@ const Navbar: FC = () => {
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
+                            <NoStyleLink key={page.name} to={page.to}>
+                                <Button
+                                    onClick={handleCloseNavMenu}
+                                    sx={{ my: 2, color: 'white', display: 'block' }}
+                                >
+                                    {page.name}
+                                </Button>
+                            </NoStyleLink>
                         ))}
                     </Box>
                     {renderAvatar()}

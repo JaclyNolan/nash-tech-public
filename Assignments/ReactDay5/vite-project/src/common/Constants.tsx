@@ -8,14 +8,14 @@ export const URLConstants = {
     LOGIN_ENDPOINT: "/login",
     BOOK: {
         GETALL: "/api/books",
-        GETID: "/api/books/:id",
+        GETID: "/api/books",
         ADD: "/api/books",
         UPDATE: "/api/books",
         DELETE: "/api/books"
     },
     CATEGORY: {
         GETALL: "/api/categories",
-        GETID: "/api/categories/:id",
+        GETID: "/api/categories",
         ADD: "/api/categories",
         UPDATE: "/api/categories",
         DELETE: "/api/categories"

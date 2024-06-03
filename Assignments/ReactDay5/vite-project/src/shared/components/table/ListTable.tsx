@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 // @antd
 import { Spin } from 'antd';
 // @mui
@@ -37,7 +37,7 @@ interface ListTableProps {
     refreshTable: () => void;
 }
 
-export default function ListTable({
+const ListTable: FC<ListTableProps> = ({
     TABLE_HEAD,
     TABLE_ROW,
     searchText,
@@ -45,7 +45,7 @@ export default function ListTable({
     setListTableUseStates,
     handleDeleteEntry,
     refreshTable
-}: Readonly<ListTableProps>) {
+}) => {
     const {
         page,
         order,
@@ -71,24 +71,24 @@ export default function ListTable({
         setFetchDataData(newFetchDataData);
     }, [fetchData]);
 
-    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, id: any) => {
+    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, id: string) => {
         setOpen(event.currentTarget);
-        setListTableUseStates((previous) => ({ ...previous, openEntry: { id } }));
+        setListTableUseStates((previous) => ({ ...previous, openEntryId: id}));
     };
 
     const handleCloseMenu = () => {
         setOpen(null);
-        setListTableUseStates((previous) => ({ ...previous, openEntry: null }))
+        setListTableUseStates((previous) => ({ ...previous, openEntryId: "" }))
     };
 
     const handleSingleDelete = async () => {
         setOpen(null);
         if (!openEntryId) return;
-        const response = await handleDeleteEntry(openEntryId);
+        await handleDeleteEntry(openEntryId);
         selected.splice(selected.indexOf(openEntryId), 1);
         refreshTable();
         setListTableUseStates((previous) => ({ ...previous, openEntryId: "" }))
-        alert(response.data);
+        alert(`Delete successfully entry with id: ${openEntryId}`);
     };
 
     const handleMultpleDelete = () => {
@@ -185,8 +185,8 @@ export default function ListTable({
                     handleMultipleDelete={handleMultpleDelete}
                 />
                 <Spin spinning={isFetchingData}>
-                    <Scrollbar>
-                        <TableContainer sx={{ minWidth: 800 }}>
+                    <Scrollbar sx={{ minWidth: 800 }}>
+                        <TableContainer >
                             <Table>
                                 <ListHead
                                     order={order}
@@ -214,7 +214,7 @@ export default function ListTable({
                                                     <IconButton
                                                         size="large"
                                                         color="inherit"
-                                                        onClick={(event) => handleOpenMenu(event, row)}
+                                                        onClick={(event) => handleOpenMenu(event, id)}
                                                     >
                                                         <Iconify icon={'eva:more-vertical-fill'} />
                                                     </IconButton>
@@ -295,3 +295,4 @@ export default function ListTable({
     );
 }
 
+export default ListTable

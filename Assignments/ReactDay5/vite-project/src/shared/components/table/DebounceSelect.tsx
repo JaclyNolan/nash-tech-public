@@ -6,7 +6,7 @@ import {
     TextField
 } from '@mui/material';
 import debounce from 'lodash/debounce';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface SelectOption {
     value: number | string;
@@ -24,7 +24,7 @@ interface DebounceSelectProps {
     [key: string]: any; // Allow any other props
 }
 
-const DebounceSelect: React.FC<DebounceSelectProps> = ({
+const DebounceSelect = ({
     fetchOptions,
     debounceTimeout = 800,
     presetOptions = [],
@@ -33,12 +33,13 @@ const DebounceSelect: React.FC<DebounceSelectProps> = ({
     value = null,
     onChange,
     ...props
-}) => {
+}: DebounceSelectProps) => {
     const [open, setOpen] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [options, _setOptions] = useState<SelectOption[]>(presetOptions);
     const [autoValue, setAutoValue] = useState<SelectOption | null>(value);
-    const [searchInput, setSearchInput] = useState('');
+    const [searchInput, setSearchInput] = useState<string>("");
+    
 
     const setOptions = (newOptions: SelectOption[] = []) => {
         presetOptions.forEach((presetOption) => {
@@ -55,12 +56,12 @@ const DebounceSelect: React.FC<DebounceSelectProps> = ({
     const fetchRef = useRef(0);
 
     const debounceFetcher = useMemo(() => {
-        const loadOptions = (value: string) => {
+        const loadOptions = (searchInput: string) => {
             fetchRef.current += 1;
             const fetchId = fetchRef.current;
             setOptions([]);
             setFetching(true);
-            fetchOptions(value).then((newOptions) => {
+            fetchOptions(searchInput).then((newOptions) => {
                 if (fetchId !== fetchRef.current) {
                     return;
                 }
@@ -71,9 +72,17 @@ const DebounceSelect: React.FC<DebounceSelectProps> = ({
         return debounce(loadOptions, debounceTimeout);
     }, [fetchOptions, debounceTimeout]);
 
+
     useEffect(() => {
+        console.log('debounce useEffect re-rendered')
+        console.log(searchInput);
+        
         debounceFetcher(searchInput);
     }, [searchInput, debounceFetcher]);
+
+    useEffect(() => {
+        setAutoValue(value);
+    }, [value])
 
     return (
         <Autocomplete
@@ -89,17 +98,18 @@ const DebounceSelect: React.FC<DebounceSelectProps> = ({
             onChange={(_, newValue) => {
                 setAutoValue(newValue);
                 setSearchInput('');
+                
                 if (onChange) onChange(newValue);
             }}
             options={options}
             loading={fetching}
             onInputChange={(_, value) => {
-                if (value !== autoValue?.value) {
-                    setSearchInput(value);
+                if (value !== autoValue?.value) {                    
+                    setSearchInput(value ? value : '');
                 }
             }}
             renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props} key={option.value}>
                     {option.label}
                 </Box>
             )}

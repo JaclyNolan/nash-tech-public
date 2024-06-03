@@ -85,6 +85,12 @@ namespace EF_Core_Assignment1.Persistance.Repositories
 
         public async Task<Book> UpdateAsync(Book book)
         {
+            var existingEntity = await _context.Books.FindAsync(book.Id);
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).State = EntityState.Detached;
+            }
+
             _context.Entry(book).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return book;
