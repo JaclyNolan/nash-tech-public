@@ -1,5 +1,6 @@
 export const routeNames = {
     login: "/login",
     index: "/",
-    bookList: "/book"
+    bookList: "/books",
+    categoryList: "/categories"
 }

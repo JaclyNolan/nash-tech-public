@@ -6,9 +6,10 @@ import Iconify from "../../../shared/components/iconify/Iconify";
 import ListTable from "../../../shared/components/table/ListTable";
 import { URLConstants } from "../../../common/constants";
 import { HeadLabel } from "../../../shared/components/table/ListHead";
-import BookAdd from "./BookAdd";
-import BookEdit from "./BookEdit";
 import { nameof } from "../../../common/helper";
+import { Category } from "../BookPages/BookAdd";
+import { FetchData, ListTableUseState } from "../BookPages/BookList";
+import { CategoryAdd, CategoryEdit } from "../CategoryPages"
 
 const style = {
     position: 'absolute',
@@ -22,54 +23,20 @@ const style = {
     p: 4,
 };
 
-export interface Book {
-    id: string,
-    title: string,
-    author: string,
-    description: string,
-    categoryId: string,
-    dateCreated: string
-}
-
-export interface FetchData<T> {
-    data: T[],
-    pageNumber: number,
-    pageSize: number,
-    totalCount: number
-}
-
-export interface ListTableUseState<T> {
-    openEntryId: string,
-    page: number,
-    order: "asc" | "desc",
-    selected: string[],
-    orderBy: string,
-    filterName: string,
-    rowsPerPage: number,
-    fetchData: FetchData<T> | null,
-    isFetchingData: boolean,
-    editModalOpen: boolean,
-    addModalOpen: boolean,
-    assignModalOpen: boolean,
-}
-
-const TABLE_ROW = (book: Book) => (
+const TABLE_ROW = (category: Category) => (
     <>
-        <TableCell align="left">{book.id}</TableCell>
-        <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
-        <TableCell align="left">{book.author}</TableCell>
-        <TableCell align="left">{book.description}</TableCell>
-        <TableCell align="left">{book.dateCreated}</TableCell>
-        <TableCell align="left">{book.categoryId}</TableCell>
+        <TableCell align="left">{category.id}</TableCell>
+        <TableCell align="left"><Typography variant="subtitle2" noWrap>{category.name}</Typography></TableCell>
+        <TableCell align="left">{category.dateCreated}</TableCell>
     </>
 );
 
-const BookList:FC = () => {
-    const [listTableUseStates, setListTableUseStates] = useState<ListTableUseState<Book>>({
+const CategoryList: FC = () => {
+    const [listTableUseStates, setListTableUseStates] = useState<ListTableUseState<Category>>({
         openEntryId: "",
         page: 0,
         order: "asc",
-        orderBy: "title",
+        orderBy: "name",
         filterName: '',
         rowsPerPage: 5,
         fetchData: null,
@@ -80,16 +47,13 @@ const BookList:FC = () => {
         selected: []
     });
 
-    const placeholderSearchText = 'Search book by title...';
+    const placeholderSearchText = 'Search category by name...';
     const fetchRef = useRef<number>(0);
 
     const TABLE_HEAD: HeadLabel[] = [
-        { id: nameof<Book>('id'), label: "Id", alignRight: false, orderable: true },
-        { id: nameof<Book>('title'), label: 'Title', alignRight: false, orderable: true },
-        { id: nameof<Book>('author'), label: "Author", alignRight: false },
-        { id: nameof<Book>('description'), label: 'Description', alignRight: false },
-        { id: nameof<Book>('dateCreated'), label: 'Created At', alignRight: false, orderable: true },
-        { id: nameof<Book>('categoryId'), label: 'Category Id', alignRight: false },
+        { id: nameof<Category>('id'), label: "Id", alignRight: false, orderable: true },
+        { id: nameof<Category>('name'), label: 'Name', alignRight: false, orderable: true },
+        { id: nameof<Category>('dateCreated'), label: 'Created At', alignRight: false, orderable: true },
         { id: 'actions', label: 'Action' },
     ];
 
@@ -97,11 +61,11 @@ const BookList:FC = () => {
         setListTableUseStates((prevState) => ({ ...prevState, isFetchingData: isFetching }));
     };
 
-    const setFetchData = (data: FetchData<Book>) => {
+    const setFetchData = (data: FetchData<Category>) => {
         setListTableUseStates((prevState) => ({ ...prevState, fetchData: data }));
     };
 
-    const fetchBookData = async () => {
+    const fetchCategoryData = async () => {
         setFetchingData(true);
         const { page, order, orderBy, filterName, rowsPerPage } = listTableUseStates;
         const pagePlusOne = page + 1;
@@ -114,20 +78,20 @@ const BookList:FC = () => {
         };
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
-        const response = await axiosInstance.get(URLConstants.BOOK.GETALL, { params });
+        const response = await axiosInstance.get(URLConstants.CATEGORY.GETALL, { params });
         if (fetchId !== fetchRef.current) return;
         setFetchData(response.data);
         setFetchingData(false);
     };
 
-    const handleDeleteBook = async (id: string) => {
+    const handleDeleteCategory = async (id: string) => {
         setFetchingData(true);
-        const response = await axiosInstance.delete(`${URLConstants.BOOK.DELETE}/${id}`);
+        const response = await axiosInstance.delete(`${URLConstants.CATEGORY.DELETE}/${id}`);
         return response;
     };
 
     const refreshTable = () => {
-        if (listTableUseStates.page === 0) fetchBookData();
+        if (listTableUseStates.page === 0) fetchCategoryData();
         else setListTableUseStates((prevState) => ({ ...prevState, page: 0 }));
     };
 
@@ -136,22 +100,22 @@ const BookList:FC = () => {
     const handleEditModalClose = () => setListTableUseStates((prevState) => ({ ...prevState, editModalOpen: false }));
 
     useEffect(() => {
-        fetchBookData();
+        fetchCategoryData();
     }, [listTableUseStates.page, listTableUseStates.orderBy, listTableUseStates.order, listTableUseStates.filterName, listTableUseStates.rowsPerPage]);
 
     return (
         <>
             <Helmet>
-                <title> Book Management </title>
+                <title> Category Management </title>
             </Helmet>
 
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Book Management
+                        Category Management
                     </Typography>
                     <Button onClick={handleAddModalOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                        New Book
+                        New Category
                     </Button>
                 </Stack>
                 <ListTable
@@ -160,7 +124,7 @@ const BookList:FC = () => {
                     listTableUseStates={listTableUseStates}
                     setListTableUseStates={setListTableUseStates}
                     searchText={placeholderSearchText}
-                    handleDeleteEntry={handleDeleteBook}
+                    handleDeleteEntry={handleDeleteCategory}
                     refreshTable={refreshTable}
                 />
             </Container>
@@ -172,7 +136,7 @@ const BookList:FC = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <BookAdd fetchList={fetchBookData} />
+                    <CategoryAdd fetchList={fetchCategoryData} />
                 </Box>
             </Modal>
 
@@ -184,11 +148,11 @@ const BookList:FC = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <BookEdit fetchList={fetchBookData} entryId={listTableUseStates.openEntryId} />
+                    <CategoryEdit fetchList={fetchCategoryData} entryId={listTableUseStates.openEntryId} />
                 </Box>
             </Modal>
         </>
     );
 }
 
-export default BookList
+export default CategoryList;

@@ -10,16 +10,11 @@ import { URLConstants } from '../../../common/constants';
 import DebounceSelect, { SelectOption } from '../../../shared/components/table/DebounceSelect';
 import { Book, FetchData } from './BookList';
 import { AxiosResponse } from 'axios';
+import { Category } from './BookAdd';
 
 interface BookEditProps {
     fetchList: () => void;
     entryId: string;
-}
-
-export interface Category {
-    id: string;
-    name: string;
-    dateCreated: string;
 }
 
 // Validation schema
@@ -34,8 +29,6 @@ const BookEdit: FC<BookEditProps> = ({ fetchList, entryId }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const fetchCategoryData = useCallback(async (search: string): Promise<SelectOption[]> => {
-        // console.log(search);
-        
         const params = { search };
         const response: AxiosResponse<FetchData<Category>> = await axiosInstance.get(URLConstants.CATEGORY.GETALL, { params });
         const categories: Category[] = response.data.data;
@@ -62,7 +55,7 @@ const BookEdit: FC<BookEditProps> = ({ fetchList, entryId }) => {
                 categoryId: values.category?.value,
             };
             try {
-                const response = await axiosInstance.put(`${URLConstants.BOOK.GETID}/${entryId}`, payload);
+                await axiosInstance.put(`${URLConstants.BOOK.GETID}/${entryId}`, payload);
                 alert(`Updated successfully! Id: ${entryId}, Title: ${payload.title}`);
                 fetchList();
             } catch (error) {

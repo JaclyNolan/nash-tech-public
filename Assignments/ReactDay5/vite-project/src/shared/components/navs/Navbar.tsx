@@ -14,6 +14,10 @@ const pages = [
         name: 'Book',
         to: routeNames.bookList,
     },
+    {
+        name: "Category",
+        to: routeNames.categoryList
+    }
 ]
 const settings = ['Profile', 'Account', 'Dashboard'];
 
