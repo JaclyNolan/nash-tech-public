@@ -1,6 +1,7 @@
 ﻿using EF_Core_Assignment1.Domain.Entities;
 using EF_Core_Assignment1.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace EF_Core_Assignment1.Persistance.Repositories
 {
@@ -29,25 +30,31 @@ namespace EF_Core_Assignment1.Persistance.Repositories
                 query = query.Where(c => c.Name.Contains(search));
             }
 
+            Expression<Func<Category, object>> expressionOrder;
+
             // Apply sorting
             switch (sortField.ToLower())
             {
                 case "name":
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(c => c.Name)
-                        : query.OrderBy(c => c.Name);
+                    expressionOrder = e => e.Name;
                     break;
                 case "datecreated":
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(c => c.DateCreated)
-                        : query.OrderBy(c => c.DateCreated);
+                    expressionOrder = e => e.DateCreated;
                     break;
                 default:
                     // Default sorting by Id if invalid sortField is provided
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(c => c.Id)
-                        : query.OrderBy(c => c.Id);
+                    expressionOrder = e => e.Id;
                     break;
+            }
+
+            if (sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase))
+            {
+                query = query.OrderByDescending(expressionOrder);
+            }
+            else
+            {
+                query = query.OrderBy(expressionOrder);
+
             }
 
             var totalCount = await query.CountAsync();
@@ -85,6 +92,12 @@ namespace EF_Core_Assignment1.Persistance.Repositories
 
         public async Task<Category> UpdateAsync(Category category)
         {
+            var existingEntity = await _context.Categories.FindAsync(category.Id);
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).State = EntityState.Detached;
+            }
+
             _context.Entry(category).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return category;

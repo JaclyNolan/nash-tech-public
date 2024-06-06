@@ -40,7 +40,8 @@ namespace EF_Core_Assignment1.Persistance.Seeder
             Console.WriteLine("Book table seeded successfully");
         }
 
-        public static void SeedCategory(this NashTechContext context) {
+        public static void SeedCategory(this NashTechContext context)
+        {
             if (context.Categories.Any())
             {
                 Console.WriteLine("Category table already seeded");
@@ -140,7 +141,7 @@ namespace EF_Core_Assignment1.Persistance.Seeder
             Console.WriteLine("Role table seeded successfully");
         }
 
-        public static async Task SeedUser (this NashTechContext context, IServiceProvider services)
+        public static async Task SeedUser(this NashTechContext context, IServiceProvider services)
         {
             if (context.Users.Any())
             {
@@ -153,31 +154,47 @@ namespace EF_Core_Assignment1.Persistance.Seeder
 
             // Seed specific admin user
             var adminEmail = "anhbg330011@gmail.com";
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-            if (adminUser == null)
+            var seedPassword = "Password1!";
+            var adminUser = new ApplicationUser
             {
-                adminUser = new ApplicationUser
-                {
-                    UserName = "Jacly",
-                    Email = adminEmail,
-                    EmailConfirmed = true
-                };
-                await userManager.CreateAsync(adminUser, "Password1!");
+                UserName = adminEmail,
+                Email = adminEmail,
+                Name = "Jacly",
+                EmailConfirmed = true
+            };
+            await userManager.CreateAsync(adminUser, seedPassword);
 
-                await userManager.AddToRoleAsync(adminUser, UserRole.Admin.ToString());
+            await userManager.AddToRoleAsync(adminUser, UserRole.Admin.ToString());
+
+            // Seed specific normal user
+            var userEmail = "anhnmbh00203@fpt.edu.vn";
+            var normalUser = new ApplicationUser
+            {
+                UserName = userEmail,
+                Email = userEmail,
+                Name = "Jacly2",
+                EmailConfirmed = true
+            };
+            var result1 = await userManager.CreateAsync(normalUser, seedPassword);
+            Console.WriteLine($"What: {result1}");
+
+            if (!result1.Succeeded)
+            {
+                Console.WriteLine(result1.Errors.Select(e => e.Description));
             }
+            await userManager.AddToRoleAsync(normalUser, UserRole.User.ToString());
 
             // Seed 3 random admin users
             var adminFaker = new Faker<ApplicationUser>()
-                .RuleFor(u => u.UserName, f => f.Internet.UserName())
-                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.UserName, f => f.Internet.Email())
+                .RuleFor(u => u.Email, (f, u) => u.UserName)
+                .RuleFor(u => u.Name, f => f.Internet.UserName())
                 .RuleFor(u => u.EmailConfirmed, true);
 
             for (int i = 0; i < 3; i++)
             {
                 ApplicationUser user = adminFaker.Generate();
-                var result = await userManager.CreateAsync(user, "Password1!");
+                var result = await userManager.CreateAsync(user, seedPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, UserRole.Admin.ToString());
@@ -190,14 +207,15 @@ namespace EF_Core_Assignment1.Persistance.Seeder
 
             // Seed 10 regular users
             var userFaker = new Faker<ApplicationUser>()
-                .RuleFor(u => u.UserName, f => f.Internet.UserName())
-                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.UserName, f => f.Internet.Email())
+                .RuleFor(u => u.Email, (f, u) => u.UserName)
+                .RuleFor(u => u.Name, f => f.Internet.UserName())
                 .RuleFor(u => u.EmailConfirmed, true);
 
             for (int i = 0; i < 10; i++)
             {
                 var user = userFaker.Generate();
-                var result = await userManager.CreateAsync(user, "Password1!");
+                var result = await userManager.CreateAsync(user, seedPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, UserRole.User.ToString());

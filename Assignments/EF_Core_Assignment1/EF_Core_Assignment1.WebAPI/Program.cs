@@ -36,8 +36,14 @@ builder.Services.AddDbContext<NashTechContext>(opt =>
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IBorrowingRequestRepository, BorrowingRequestRepository>();
+builder.Services.AddScoped<IBorrowingRequestDetailRepository, BorrowingRequestDetailRepository>();
+builder.Services.AddScoped<IBorrowingRequestService, BorrowingRequestService>();
+
 builder.Services.AddAutoMapper(typeof(NashTechProfile).Assembly);
 
 builder.Services.AddAuthorization();
@@ -83,7 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<ApplicationUser>();
 
 app.UseAuthorization();
 

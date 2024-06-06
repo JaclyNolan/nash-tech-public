@@ -11,7 +11,7 @@ namespace EF_Core_Assignment1.Domain.Entities
 
         public string RequestorId { get; set; } = null!;
 
-        public string? ApproverId { get; set; }
+        public string? ActionerId { get; set; }
 
         [Required]
         public DateTime RequestDate { get; set; }
@@ -20,7 +20,7 @@ namespace EF_Core_Assignment1.Domain.Entities
 
         // Navigation property
         public ApplicationUser Requestor { get; set; } = null!;
-        public ApplicationUser? Approver { get; set; }
+        public ApplicationUser? Actioner { get; set; }
         public ICollection<BookBorrowingRequestDetails> BookBorrowingRequestDetails { get; } = new List<BookBorrowingRequestDetails>();
     }
 

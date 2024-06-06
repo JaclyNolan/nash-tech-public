@@ -4,6 +4,7 @@ using EF_Core_Assignment1.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_Core_Assignment1.Persistance.Migrations
 {
     [DbContext(typeof(NashTechContext))]
-    partial class NashTechContextModelSnapshot : ModelSnapshot
+    [Migration("20240604035426_AdjustUserTable")]
+    partial class AdjustUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +114,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ActionerId")
+                    b.Property<string>("ApproverId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("DateCreated")
@@ -135,7 +138,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActionerId");
+                    b.HasIndex("ApproverId");
 
                     b.HasIndex("RequestorId");
 
@@ -394,9 +397,9 @@ namespace EF_Core_Assignment1.Persistance.Migrations
 
             modelBuilder.Entity("EF_Core_Assignment1.Domain.Entities.BookBorrowingRequest", b =>
                 {
-                    b.HasOne("EF_Core_Assignment1.Persistance.Identity.ApplicationUser", "Actioner")
-                        .WithMany("ActionedBookBorrowingRequest")
-                        .HasForeignKey("ActionerId")
+                    b.HasOne("EF_Core_Assignment1.Persistance.Identity.ApplicationUser", "Approver")
+                        .WithMany("ApprovedBookBorrowingRequest")
+                        .HasForeignKey("ApproverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EF_Core_Assignment1.Persistance.Identity.ApplicationUser", "Requestor")
@@ -405,7 +408,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Actioner");
+                    b.Navigation("Approver");
 
                     b.Navigation("Requestor");
                 });
@@ -487,7 +490,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
 
             modelBuilder.Entity("EF_Core_Assignment1.Persistance.Identity.ApplicationUser", b =>
                 {
-                    b.Navigation("ActionedBookBorrowingRequest");
+                    b.Navigation("ApprovedBookBorrowingRequest");
 
                     b.Navigation("RequestedBookBorrowingRequest");
 

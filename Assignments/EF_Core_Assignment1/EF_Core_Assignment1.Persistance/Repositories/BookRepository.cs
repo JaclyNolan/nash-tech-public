@@ -1,6 +1,7 @@
 ﻿using EF_Core_Assignment1.Domain.Entities;
 using EF_Core_Assignment1.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace EF_Core_Assignment1.Persistance.Repositories
 {
@@ -29,25 +30,34 @@ namespace EF_Core_Assignment1.Persistance.Repositories
                 query = query.Where(b => b.Title.Contains(search));
             }
 
+            Expression<Func<Book, object>> expressionOrder;
+
             // Apply sorting
             switch (sortField.ToLower())
             {
                 case "title":
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(b => b.Title)
-                        : query.OrderBy(b => b.Title);
+                    expressionOrder = e => e.Title;
+                    break;
+                case "author":
+                    expressionOrder = e => e.Author;
                     break;
                 case "datecreated":
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(b => b.DateCreated)
-                        : query.OrderBy(b => b.DateCreated);
+                    expressionOrder = e => e.DateCreated;
                     break;
                 default:
                     // Default sorting by Id if invalid sortField is provided
-                    query = sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase)
-                        ? query.OrderByDescending(b => b.Id)
-                        : query.OrderBy(b => b.Id);
+                    expressionOrder = e => e.Id;
                     break;
+            }
+
+            if (sortOrder.Equals("desc", StringComparison.CurrentCultureIgnoreCase))
+            {
+                query = query.OrderByDescending(expressionOrder);
+            }
+            else
+            {
+                query = query.OrderBy(expressionOrder);
+
             }
 
             var totalCount = await query.CountAsync();
