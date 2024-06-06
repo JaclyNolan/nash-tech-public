@@ -17,11 +17,11 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedResult<CategoryViewModel>>> GetAllCategories([FromQuery] GetAllCategoryRequest request)
+        public async Task<ActionResult<PaginatedResult<CategoryAdminViewModel>>> GetAllCategories([FromQuery] GetAllCategoryRequest request)
         {
             var (categories, totalCount) = await _categoryService.GetAllCategoriesAsync(request);
 
-            var paginatedResult = new PaginatedResult<CategoryViewModel>
+            var paginatedResult = new PaginatedResult<CategoryAdminViewModel>
             {
                 Data = categories,
                 PageNumber = request.PageNumber,
@@ -33,7 +33,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryViewModel>> GetCategoryById(Guid id)
+        public async Task<ActionResult<CategoryAdminViewModel>> GetCategoryById(Guid id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
@@ -44,7 +44,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryViewModel>> AddCategory([FromBody] CreateCategoryRequest createCategoryRequest)
+        public async Task<ActionResult<CategoryAdminViewModel>> AddCategory([FromBody] CreateCategoryRequest createCategoryRequest)
         {
             var createdCategory = await _categoryService.AddCategoryAsync(createCategoryRequest);
             return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory);

@@ -20,11 +20,11 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
-        public async Task<ActionResult<PaginatedResult<BookViewModel>>> GetAllBooks([FromQuery] GetAllBookRequest request)
+        public async Task<ActionResult<PaginatedResult<BookViewAdminModel>>> GetAllBooks([FromQuery] GetAllBookRequest request)
         {
             var (books, totalCount) = await _bookService.GetAllBooksAsync(request);
 
-            var paginatedResult = new PaginatedResult<BookViewModel>
+            var paginatedResult = new PaginatedResult<BookViewAdminModel>
             {
                 Data = books,
                 PageNumber = request.Page,
@@ -44,7 +44,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
-        public async Task<ActionResult<BookViewModel>> GetBookById(Guid id)
+        public async Task<ActionResult<BookViewAdminModel>> GetBookById(Guid id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
@@ -56,7 +56,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
-        public async Task<ActionResult<BookViewModel>> AddBook([FromBody] CreateBookRequest createBookRequest)
+        public async Task<ActionResult<BookViewAdminModel>> AddBook([FromBody] CreateBookRequest createBookRequest)
         {
             var createdBook = await _bookService.AddBookAsync(createBookRequest);
             return CreatedAtAction(nameof(GetBookById), new { id = createdBook.Id }, createdBook);

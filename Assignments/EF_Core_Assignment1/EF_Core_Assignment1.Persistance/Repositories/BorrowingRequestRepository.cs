@@ -45,7 +45,8 @@ namespace EF_Core_Assignment1.Persistance.Repositories
                 .Include(b => b.Requestor)
                 .Include(b => b.Actioner)
                 .Include(b => b.BookBorrowingRequestDetails)
-                    .ThenInclude(de => de.Book)
+                    .ThenInclude(d => d.Book)
+                        .ThenInclude(b => b.Category)
                 .ToListAsync();
         }
 
@@ -55,7 +56,8 @@ namespace EF_Core_Assignment1.Persistance.Repositories
                 .Include(b => b.Requestor)
                 .Include(b => b.Actioner)
                 .Include(b => b.BookBorrowingRequestDetails)
-                    .ThenInclude(de => de.Book)
+                    .ThenInclude(d => d.Book)
+                        .ThenInclude(b => b.Category)
                 .AsQueryable();
 
             Expression<Func<BookBorrowingRequest, object>> expressionOrder;
@@ -98,18 +100,29 @@ namespace EF_Core_Assignment1.Persistance.Repositories
         public async Task<BookBorrowingRequest?> GetByIdAsync(Guid id)
         {
             return await _context.BookBorrowingRequests
+                .Include(b => b.Requestor)
+                .Include(b => b.Actioner)
+                .Include(b => b.BookBorrowingRequestDetails)
+                    .ThenInclude(d => d.Book)
+                        .ThenInclude(b => b.Category)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<List<BookBorrowingRequest>> GetBorrowingRequestForUserBetween(string userId, DateTime startDate, DateTime endDate)
         {
-            return await _context.BookBorrowingRequests.Include(r => r.BookBorrowingRequestDetails)
+            return await _context.BookBorrowingRequests
+                .Include(r => r.BookBorrowingRequestDetails)
+                    .ThenInclude(d => d.Book)
+                        .ThenInclude(b => b.Category)
                 .Where(b => b.RequestorId == userId && b.RequestDate >= startDate && b.RequestDate <= endDate)
                 .ToListAsync();
         }
         public async Task<List<BookBorrowingRequest>> GetBorrowingRequestForUser(string userId)
         {
-            return await _context.BookBorrowingRequests.Include(r => r.BookBorrowingRequestDetails)
+            return await _context.BookBorrowingRequests
+                .Include(r => r.BookBorrowingRequestDetails)
+                    .ThenInclude(d => d.Book)
+                        .ThenInclude(b => b.Category)
                 .Where(b => b.RequestorId == userId)
                 .ToListAsync();
         }

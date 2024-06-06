@@ -19,12 +19,14 @@ namespace EF_Core_Assignment1.Application.Mapper
             // Book
             CreateMap<CreateBookRequest, Book>();
             CreateMap<UpdateBookRequest, Book>();
-            CreateMap<Book, BookViewModel>();
+            CreateMap<Book, BookViewAdminModel>();
+            CreateMap<Book, BookUserViewModel>();
 
             // Category
             CreateMap<CreateCategoryRequest, Category>();
             CreateMap<UpdateCategoryRequest, Category>();
-            CreateMap<Category, CategoryViewModel>();
+            CreateMap<Category, CategoryAdminViewModel>();
+            CreateMap<Category, CategoryUserViewModel>();
 
             // Account
             CreateMap<ApplicationRole, RoleViewModel>();
@@ -38,7 +40,8 @@ namespace EF_Core_Assignment1.Application.Mapper
             CreateMap<BookBorrowingRequest, BookBorrowingRequestUserViewModel>();
 
             // Borrowing Detail
-            CreateMap<BookBorrowingRequestDetails, BorrowingDetailsViewModel>();
+            CreateMap<BookBorrowingRequestDetails, BorrowingDetailsAdminViewModel>();
+            CreateMap<BookBorrowingRequestDetails, BorrowingDetailsUserViewModel>();
         }
     }
 }

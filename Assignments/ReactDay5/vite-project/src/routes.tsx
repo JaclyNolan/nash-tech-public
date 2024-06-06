@@ -11,6 +11,7 @@ import { Error401, Error403, Error404, Error500 } from './shared/pages/ErrorPage
 import Home from './shared/pages/Home';
 import BookList from './admin/pages/BookPages/BookList';
 import { CategoryList } from './admin/pages/CategoryPages';
+import { UserBorrowingList } from './user/pages/BorrowingPages';
 
 // const Login = lazy(() => import('./guest/pages/Login'))
 
@@ -34,7 +35,7 @@ const commonRoutes: RouteObject[] = [
         ]
     },
     {
-        element: <SimpleLayout/>,
+        element: <SimpleLayout />,
         children: [
             {
                 path: routeNames.notFound,
@@ -66,7 +67,7 @@ const guestRoutes: RouteObject[] = [
         children: [
             {
                 path: routeNames.index,
-                element: <Navigate to={routeNames.login} replace/>
+                element: <Navigate to={routeNames.login} replace />
             },
         ]
     },
@@ -74,6 +75,20 @@ const guestRoutes: RouteObject[] = [
 ]
 
 const userRoutes: RouteObject[] = [
+    {
+        element: <RequireAuth allowedRoles={[RoleName.User]} />,
+        children: [
+            {
+                element: <HomeLayout />,
+                children: [
+                    {
+                        path: routeNames.borrowing,
+                        element: <UserBorrowingList />
+                    }
+                ]
+            }
+        ]
+    },
     ...commonRoutes
 ]
 

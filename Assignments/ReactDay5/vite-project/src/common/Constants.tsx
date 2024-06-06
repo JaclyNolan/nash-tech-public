@@ -12,7 +12,7 @@ export const URLConstants = {
         GETID: "/api/books",
         ADD: "/api/books",
         UPDATE: "/api/books",
-        DELETE: "/api/books"
+        DELETE: "/api/books",
     },
     CATEGORY: {
         GETALL: "/api/categories",
@@ -20,6 +20,9 @@ export const URLConstants = {
         ADD: "/api/categories",
         UPDATE: "/api/categories",
         DELETE: "/api/categories"
+    },
+    BORRROWING_REQUEST: {
+        GETALL_USER: "/api/borrowing/requests/user"
     }
 }
 

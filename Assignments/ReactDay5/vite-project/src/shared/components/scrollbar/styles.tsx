@@ -1,6 +1,5 @@
-import SimpleBar from 'simplebar-react';
 import { alpha, styled } from '@mui/material/styles';
-import { CSSProperties } from 'react';
+import SimpleBar from 'simplebar-react';
 
 // ----------------------------------------------------------------------
 

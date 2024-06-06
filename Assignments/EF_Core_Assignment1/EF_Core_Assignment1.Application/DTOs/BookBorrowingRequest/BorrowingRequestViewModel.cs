@@ -15,7 +15,7 @@ namespace EF_Core_Assignment1.Application.DTOs.BookBorrowingRequest
         //Navigation property view models
         public UserViewModel Requestor { get; set; }
         public UserViewModel Actioner { get; set; }
-        public ICollection<BorrowingDetailsViewModel> BookBorrowingRequestDetails { get; set; } = new List<BorrowingDetailsViewModel>();
+        public ICollection<BorrowingDetailsAdminViewModel> BookBorrowingRequestDetails { get; set; } = new List<BorrowingDetailsAdminViewModel>();
     }
 
     public class BookBorrowingRequestUserViewModel
@@ -23,6 +23,6 @@ namespace EF_Core_Assignment1.Application.DTOs.BookBorrowingRequest
         public Guid Id { get; set; }
         public DateTime RequestDate { get; set; }
         public BookRequestStatus Status { get; set; }
-        public ICollection<BorrowingDetailsViewModel> BookBorrowingRequestDetails { get; set; } = new List<BorrowingDetailsViewModel>();
+        public ICollection<BorrowingDetailsUserViewModel> BookBorrowingRequestDetails { get; set; } = new List<BorrowingDetailsUserViewModel>();
     }
 }
