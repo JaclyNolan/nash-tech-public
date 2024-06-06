@@ -23,8 +23,8 @@ export interface Role {
 }
 
 export enum RoleName {
-    "Admin",
-    "User"
+    Admin = "Admin",
+    User = "User"
 }
 
 export interface UserCredential {
@@ -41,7 +41,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [userCredential, _setUserCredential] = useState<UserCredential | null>(() => {
         // Retrieve user credential from localStorage on initial load
-        const storedUserCredential = localStorage.getItem('userCredential');
+        const storedUserCredential = localStorage.getItem(LocalStorageConstants.USER_CREDENTIAL);
         return storedUserCredential ? JSON.parse(storedUserCredential) : null;
     });
     const [isUserFetching, setIsUserFetching] = useState<boolean>(false);

@@ -16,6 +16,15 @@ import { Error401, Error403, Error500 } from './shared/pages/ErrorPages';
 
 const commonRoutes: RouteObject[] = [
     {
+        element: <RequireGuest />,
+        children: [
+            {
+                path: routeNames.login,
+                element: <Login />
+            }
+        ]
+    },
+    {
         element: <HomeLayout />,
         children: [
             {
@@ -48,12 +57,12 @@ const commonRoutes: RouteObject[] = [
 
 const guestRoutes: RouteObject[] = [
     {
-        element: <RequireGuest />,
+        element: <RequireAuth />,
         children: [
             {
-                path: routeNames.login,
-                element: <Login />
-            }
+                path: routeNames.index,
+                element: <Navigate to="/login" replace/>
+            },
         ]
     },
     ...commonRoutes
@@ -86,8 +95,8 @@ const adminRoutes: RouteObject[] = [
 ]
 
 const AppRouter: React.FC = () => {
-    const {user} = useAuth();
-    const getRoutes = () :RouteObject[]  => {
+    const { user } = useAuth();
+    const getRoutes = (): RouteObject[] => {
         switch (user?.roles[0].name) {
             case RoleName.Admin:
                 return adminRoutes;

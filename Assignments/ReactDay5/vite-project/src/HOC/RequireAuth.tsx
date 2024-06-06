@@ -3,7 +3,7 @@ import { RoleName, useAuth, User } from '../contexts/AuthContext';
 import { routeNames } from '../routesConstants';
 
 interface RequireAuthProps {
-    allowedRoles: RoleName[]
+    allowedRoles?: RoleName[]
 }
 
 const RequireAuth = ({ allowedRoles = [] }: RequireAuthProps) => {
