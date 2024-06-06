@@ -27,17 +27,17 @@ import ListToolbar from './ListToolbar';
 // sections
 // ----------------------------------------------------------------------
 
-interface ListTableProps {
+interface ListTableProps<T> {
     TABLE_HEAD: HeadLabel[];
     TABLE_ROW: (row: any) => JSX.Element;
     searchText: string;
-    listTableUseStates: ListTableUseState;
-    setListTableUseStates: React.Dispatch<React.SetStateAction<ListTableUseState>>;
+    listTableUseStates: ListTableUseState<T>;
+    setListTableUseStates: React.Dispatch<React.SetStateAction<ListTableUseState<T>>>;
     handleDeleteEntry: (id: any) => Promise<any>;
     refreshTable: () => void;
 }
 
-const ListTable: FC<ListTableProps> = ({
+const ListTable: FC<ListTableProps<any>> = ({
     TABLE_HEAD,
     TABLE_ROW,
     searchText,
@@ -73,7 +73,7 @@ const ListTable: FC<ListTableProps> = ({
 
     const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, id: string) => {
         setOpen(event.currentTarget);
-        setListTableUseStates((previous) => ({ ...previous, openEntryId: id}));
+        setListTableUseStates((previous) => ({ ...previous, openEntryId: id }));
     };
 
     const handleCloseMenu = () => {
@@ -185,8 +185,8 @@ const ListTable: FC<ListTableProps> = ({
                     handleMultipleDelete={handleMultpleDelete}
                 />
                 <Spin spinning={isFetchingData}>
-                    <Scrollbar sx={{ minWidth: 800 }}>
-                        <TableContainer >
+                    <TableContainer >
+                        <Scrollbar >
                             <Table>
                                 <ListHead
                                     order={order}
@@ -247,8 +247,8 @@ const ListTable: FC<ListTableProps> = ({
                                     </TableBody>
                                 )}
                             </Table>
-                        </TableContainer>
-                    </Scrollbar>
+                        </Scrollbar>
+                    </TableContainer>
                 </Spin>
 
                 <TablePagination

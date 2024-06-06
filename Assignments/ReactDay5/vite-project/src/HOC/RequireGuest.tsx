@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { routeNames } from '../../routesConstants';
+import { useAuth } from '../contexts/AuthContext';
+import { routeNames } from '../routesConstants';
 
 const RequireGuest = () => {
     const { user } = useAuth();

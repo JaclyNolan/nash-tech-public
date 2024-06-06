@@ -6,6 +6,7 @@ export const AxiosConstants = {
 
 export const URLConstants = {
     LOGIN_ENDPOINT: "/login",
+    ACCOUNT_INFO_ENDPOINT: "/api/accounts/info",
     BOOK: {
         GETALL: "/api/books",
         GETID: "/api/books",

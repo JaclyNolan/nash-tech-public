@@ -1,29 +1,18 @@
 import { AppBar, Avatar, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { FC, useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
+import { RoleName, useAuth } from "../../../contexts/AuthContext";
 import NoStyleLink from "../NoStyleLink";
 import { useNavigate } from "react-router-dom";
 import { routeNames } from "../../../routesConstants";
+import { adminNavItem, guestNavItem, NavItem, userNavItem } from "./navItems";
+import Logo from "../logo";
+import Iconify from "../iconify";
 
-const pages = [
-    {
-        name: 'Home',
-        to: routeNames.index,
-    },
-    {
-        name: 'Book',
-        to: routeNames.bookList,
-    },
-    {
-        name: "Category",
-        to: routeNames.categoryList
-    }
-]
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar: FC = () => {
     const navigate = useNavigate();
-    const { user, setUser, setUserCredential } = useAuth();
+    const { user, setUserCredential } = useAuth();
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -43,7 +32,6 @@ const Navbar: FC = () => {
     };
 
     const handleLogout = () => {
-        setUser(null)
         setUserCredential(null)
         return navigate(routeNames.login)
     }
@@ -106,11 +94,22 @@ const Navbar: FC = () => {
         )
     }
 
+    const pages = (): NavItem[] => {
+        switch (user?.roles[0].name) {
+            case RoleName.Admin:
+                return adminNavItem;
+            case RoleName.User:
+                return userNavItem;
+            default:
+                return guestNavItem;
+        }
+    }
+
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+                    <Logo sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
@@ -138,7 +137,7 @@ const Navbar: FC = () => {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            {/* <MenuIcon /> */}
+                            <Iconify icon={'eva:menu-outline'} />
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -158,16 +157,33 @@ const Navbar: FC = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            {pages().map((page) => (
                                 <NoStyleLink key={page.name} to={page.to}>
                                     <MenuItem onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{page.name}</Typography>
+                                        <Typography color="black" textAlign="center">{page.name}</Typography>
                                     </MenuItem>
                                 </NoStyleLink>
                             ))}
+                            {!user &&
+
+                                <Box sx={{ flexGrow: 0, display: { xs: 'block', md: 'none' } }}>
+                                    <Divider variant="middle" component="menu" />
+                                    <NoStyleLink to={routeNames.login}>
+                                        <MenuItem>
+                                            <Typography color="black" textAlign="center">Login</Typography>
+
+                                        </MenuItem>
+                                    </NoStyleLink>
+
+                                    <NoStyleLink to={"/register"}>
+                                        <MenuItem>
+                                            <Typography color="black" textAlign="center">Register</Typography>
+                                        </MenuItem>
+                                    </NoStyleLink>
+                                </Box>}
                         </Menu>
                     </Box>
-                    {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+                    <Logo sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
@@ -187,7 +203,7 @@ const Navbar: FC = () => {
                         LOGO
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                        {pages().map((page) => (
                             <NoStyleLink key={page.name} to={page.to}>
                                 <Button
                                     onClick={handleCloseNavMenu}

@@ -8,6 +8,7 @@ import Iconify from './../../shared/components/iconify';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../contexts/AuthContext';
 import { URLConstants } from '../../common/constants';
+import { AxiosResponse } from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ export interface LoginResponse {
 
 const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const { setUser, setUserCredential } = useAuth();
+    const { setUserCredential } = useAuth();
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState<string>('');
@@ -41,9 +42,8 @@ const LoginForm: React.FC = () => {
                 password: data.get('password') as string,
             };
 
-            const response: LoginResponse = await axiosInstance.post(URLConstants.LOGIN_ENDPOINT, payload);
-            setUser({email: payload.email});
-            setUserCredential(response);
+            const response: AxiosResponse = await axiosInstance.post(URLConstants.LOGIN_ENDPOINT, payload);
+            setUserCredential(response.data);
         } catch (error) {
             setError("Login failed. Please check your credentials");
             console.error(error);

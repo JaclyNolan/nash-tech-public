@@ -89,13 +89,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<ApplicationUser>();
-
-app.UseAuthorization();
 
 // Use the CORS policy
 app.UseCors("MyAllowSpecificOrigin");
+app.UseAuthorization();
 
+app.MapIdentityApi<ApplicationUser>();
 app.MapControllers();
 
 app.Run();

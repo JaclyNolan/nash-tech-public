@@ -53,16 +53,7 @@ export interface ListTableUseState<T> {
     assignModalOpen: boolean,
 }
 
-const TABLE_ROW = (book: Book) => (
-    <>
-        <TableCell align="left">{book.id}</TableCell>
-        <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
-        <TableCell align="left">{book.author}</TableCell>
-        <TableCell align="left">{book.description}</TableCell>
-        <TableCell align="left">{book.dateCreated}</TableCell>
-        <TableCell align="left">{book.categoryId}</TableCell>
-    </>
-);
+
 
 const BookList:FC = () => {
     const [listTableUseStates, setListTableUseStates] = useState<ListTableUseState<Book>>({
@@ -92,6 +83,17 @@ const BookList:FC = () => {
         { id: nameof<Book>('categoryId'), label: 'Category Id', alignRight: false },
         { id: 'actions', label: 'Action' },
     ];
+
+    const TABLE_ROW = (book: Book) => (
+        <>
+            <TableCell align="left">{book.id}</TableCell>
+            <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
+            <TableCell align="left">{book.author}</TableCell>
+            <TableCell align="left">{book.description}</TableCell>
+            <TableCell align="left">{book.dateCreated}</TableCell>
+            <TableCell align="left">{book.categoryId}</TableCell>
+        </>
+    );
 
     const setFetchingData = (isFetching: boolean) => {
         setListTableUseStates((prevState) => ({ ...prevState, isFetchingData: isFetching }));
