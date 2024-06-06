@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axiosInstance from '../../../axiosInstance';
 import { URLConstants } from '../../../common/constants';
-import { Category } from '../BookPages/BookAdd';
+import { Category } from '../../../admin/pages/BookPages/BookAdd';
 import { AxiosResponse } from 'axios';
 
 interface CategoryEditProps {

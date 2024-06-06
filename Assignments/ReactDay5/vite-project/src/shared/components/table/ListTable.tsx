@@ -19,7 +19,7 @@ import {
     Typography
 } from '@mui/material';
 // components
-import { ListTableUseState } from '../../../user/pages/BookPages/BookList';
+import { ListTableUseState } from '../../../admin/pages/BookPages/BookList';
 import Iconify from '../iconify/Iconify';
 import Scrollbar from '../scrollbar/Scrollbar';
 import ListHead, { HeadLabel } from './ListHead';

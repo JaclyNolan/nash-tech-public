@@ -6,5 +6,6 @@ export const routeNames = {
     unauthorized: "/unauthorized",
     forbidden: "/forbidden",
     notFound: "/404",
-    serverError: "/server-error"
+    serverError: "/server-error",
+    borrowing: "/borrowing"
 }

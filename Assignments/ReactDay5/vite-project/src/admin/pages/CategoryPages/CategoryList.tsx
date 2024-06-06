@@ -7,8 +7,8 @@ import ListTable from "../../../shared/components/table/ListTable";
 import { URLConstants } from "../../../common/constants";
 import { HeadLabel } from "../../../shared/components/table/ListHead";
 import { nameof } from "../../../common/helper";
-import { Category } from "../BookPages/BookAdd";
-import { FetchData, ListTableUseState } from "../BookPages/BookList";
+import { Category } from "../../../admin/pages/BookPages/BookAdd";
+import { FetchData, ListTableUseState } from "../../../admin/pages/BookPages/BookList";
 import { CategoryAdd, CategoryEdit } from "../CategoryPages"
 
 const style = {

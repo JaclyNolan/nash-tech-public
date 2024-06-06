@@ -1,16 +1,16 @@
 import React from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import RequireAuth from './HOC/RequireAuth';
 import RequireGuest from './HOC/RequireGuest';
+import { RoleName, useAuth } from './contexts/AuthContext';
 import Login from './guest/pages/Login';
-import NotFound from './guest/pages/NotFound';
 import { routeNames } from './routesConstants';
 import HomeLayout from './shared/layouts/HomeLayout';
+import SimpleLayout from './shared/layouts/SimpleLayout';
+import { Error401, Error403, Error404, Error500 } from './shared/pages/ErrorPages';
 import Home from './shared/pages/Home';
-import BookList from './user/pages/BookPages/BookList';
-import { CategoryList } from './user/pages/CategoryPages';
-import RequireAuth from './HOC/RequireAuth';
-import { RoleName, useAuth } from './contexts/AuthContext';
-import { Error401, Error403, Error500 } from './shared/pages/ErrorPages';
+import BookList from './admin/pages/BookPages/BookList';
+import { CategoryList } from './admin/pages/CategoryPages';
 
 // const Login = lazy(() => import('./guest/pages/Login'))
 
@@ -34,20 +34,25 @@ const commonRoutes: RouteObject[] = [
         ]
     },
     {
-        path: routeNames.notFound,
-        element: <NotFound />
-    },
-    {
-        path: routeNames.unauthorized,
-        element: <Error401 />
-    },
-    {
-        path: routeNames.forbidden,
-        element: <Error403 />
-    },
-    {
-        path: routeNames.serverError,
-        element: <Error500 />
+        element: <SimpleLayout/>,
+        children: [
+            {
+                path: routeNames.notFound,
+                element: <Error404 />
+            },
+            {
+                path: routeNames.unauthorized,
+                element: <Error401 />
+            },
+            {
+                path: routeNames.forbidden,
+                element: <Error403 />
+            },
+            {
+                path: routeNames.serverError,
+                element: <Error500 />
+            },
+        ]
     },
     {
         path: '*',
@@ -61,7 +66,7 @@ const guestRoutes: RouteObject[] = [
         children: [
             {
                 path: routeNames.index,
-                element: <Navigate to="/login" replace/>
+                element: <Navigate to={routeNames.login} replace/>
             },
         ]
     },

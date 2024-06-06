@@ -19,7 +19,7 @@ export const userNavItem: NavItem[] = [
     },
     {
         name: 'Borrowing',
-        to: routeNames.index,
+        to: routeNames.borrowing,
     }
 ]
 
