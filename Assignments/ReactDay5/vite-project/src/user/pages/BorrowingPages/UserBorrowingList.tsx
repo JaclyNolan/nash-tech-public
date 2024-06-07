@@ -1,49 +1,26 @@
-import { Button, Card, Container, Stack, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Modal, Stack, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { Spin } from 'antd';
-import { debounce } from 'lodash';
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { AxiosResponse } from 'axios';
+import { FC, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import axiosInstance from "../../../axiosInstance";
 import { URLConstants } from "../../../common/constants";
 import Iconify from "../../../shared/components/iconify/Iconify";
 import Scrollbar from '../../../shared/components/scrollbar/Scrollbar';
 import { UserBorrowingTableRow } from '../../components/borrowing';
-import { AxiosResponse } from 'axios';
+import UserBorrowingAdd from './UserBorrowingAdd';
 
-// const StyledRoot = styled(Toolbar)(({ theme }) => ({
-//     height: 96,
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//     padding: theme.spacing(0, 1, 0, 3),
-// }));
-
-// const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
-//     width: 240,
-//     transition: theme.transitions.create(['box-shadow', 'width'], {
-//         easing: theme.transitions.easing.easeInOut,
-//         duration: theme.transitions.duration.shorter,
-//     }),
-//     '&.Mui-focused': {
-//         width: 320,
-//         // boxShadow: theme.customShadows.z8,
-//     },
-//     '& fieldset': {
-//         borderWidth: `1px !important`,
-//         borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
-//     },
-// }));
-
-// const StyleBox = styled(Backdrop)(({ theme }) => ({
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width: 552,
-//     backgroundColor: theme.palette.background.paper, // Use backgroundColor instead of bgcolor
-//     border: '0px solid #000',
-//     boxShadow: '10px',
-//     p: 4,
-// }));
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 900,
+    bgcolor: 'background.paper',
+    border: '0px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 export interface BorrowingRequestUser {
     id: string,
@@ -52,7 +29,7 @@ export interface BorrowingRequestUser {
     bookBorrowingRequestDetails: BorrowingRequestDetailsUser[]
 }
 
-interface BorrowingRequestDetailsUser {
+export interface BorrowingRequestDetailsUser {
     id: string,
     borrowedDate: string,
     returnedDate: string,
@@ -61,7 +38,7 @@ interface BorrowingRequestDetailsUser {
     book: BookUser
 }
 
-interface BookUser {
+export interface BookUser {
     id: string,
     title: string,
     author: string,
@@ -70,7 +47,7 @@ interface BookUser {
     category: CategoryUser,
 }
 
-interface CategoryUser {
+export interface CategoryUser {
     id: string,
     name: string,
 }
@@ -82,30 +59,37 @@ export enum BookStatus {
 }
 
 const UserBorrowingList: FC = () => {
-    const [fetchData, setFetchData] = useState<BorrowingRequestUser[] | null>(null);
+    const [fetchData, setFetchData] = useState<BorrowingRequestUser[]>([]);
+    const [currentMonthRequests, setCurrentMonthRequests] = useState<BorrowingRequestUser[]>([]);
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
-
-    // const placeholderSearchText = 'Search book by title...';
-    const fetchRef = useRef<number>(0);
+    const [doShowAll, setDoShowAll] = useState<boolean>(true);
 
     const fetchBorrowingRequestsData = async () => {
         setIsFetching(true);
-        fetchRef.current += 1;
-        const fetchId = fetchRef.current;
-        const response: AxiosResponse = await axiosInstance.get(URLConstants.BORRROWING_REQUEST.GETALL_USER);
-        console.log(response.data)
-
-        if (fetchId !== fetchRef.current) return;
+        const response: AxiosResponse = await axiosInstance.get(URLConstants.BORROWING_REQUEST.GETALL_USER);
         setFetchData(response.data as BorrowingRequestUser[]);
+        setIsFetching(false);
+    };
+
+    const fetchCurrentMonthBorrowingRequestsData = async () => {
+        setIsFetching(true);
+        const response: AxiosResponse = await axiosInstance.get(URLConstants.BORROWING_REQUEST.GET_CURRENT_MONTH);
+        setCurrentMonthRequests(response.data as BorrowingRequestUser[]);
         setIsFetching(false);
     };
 
     useEffect(() => {
         fetchBorrowingRequestsData();
+        fetchCurrentMonthBorrowingRequestsData();
     }, [])
 
+    const toggleShowAll = () => {
+        setDoShowAll(doShowAll ? false : true);
+    }
+
     const handleAddModalOpen = () => setAddModalOpen(true);
+    const handleAddModalClose = () => setAddModalOpen(false);
 
     return (
         <>
@@ -118,9 +102,16 @@ const UserBorrowingList: FC = () => {
                     <Typography variant="h4" gutterBottom>
                         Your Borrowing Requests
                     </Typography>
-                    <Button onClick={handleAddModalOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                        New Borrowing Request
-                    </Button>
+                    <Stack direction="row" alignItems="center" gap={5}>
+                        <Button variant="contained" onClick={toggleShowAll}>
+                            {doShowAll
+                                ? `This month's requests ${currentMonthRequests.length}/3`
+                                : `Show All`}
+                        </Button>
+                        <Button onClick={handleAddModalOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+                            New Borrowing Request
+                        </Button>
+                    </Stack>
                 </Stack>
                 <Card>
                     <Spin spinning={isFetching}>
@@ -135,7 +126,9 @@ const UserBorrowingList: FC = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {fetchData && fetchData.map((request) =>
+                                        {doShowAll && fetchData.map((request) =>
+                                            <UserBorrowingTableRow key={request.id} request={request} />)}
+                                        {!doShowAll && currentMonthRequests.map((request) =>
                                             <UserBorrowingTableRow key={request.id} request={request} />)}
                                     </TableBody>
                                 </Table>
@@ -144,17 +137,17 @@ const UserBorrowingList: FC = () => {
                     </Spin>
                 </Card>
             </Container>
-            {/* <Modal
+            <Modal
                 key='add'
-                open={listTableUseStates.addModalOpen}
+                open={addModalOpen}
                 onClose={handleAddModalClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <StyledBox>
-                    <BookAdd fetchList={fetchBookData} />
-                </StyledBox>
-            </Modal> */}
+                <Box sx={style}>
+                    <UserBorrowingAdd fetchList={fetchBorrowingRequestsData} />
+                </Box>
+            </Modal>
         </>
     );
 }

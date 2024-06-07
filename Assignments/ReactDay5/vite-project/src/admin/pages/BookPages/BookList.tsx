@@ -9,6 +9,7 @@ import { HeadLabel } from "../../../shared/components/table/ListHead";
 import BookAdd from "./BookAdd";
 import BookEdit from "./BookEdit";
 import { nameof } from "../../../common/helper";
+import { toStandardExtendedFormat } from './../../../common/helper';
 
 const style = {
     position: 'absolute',
@@ -90,7 +91,7 @@ const BookList:FC = () => {
             <TableCell align="left"><Typography variant="subtitle2" noWrap>{book.title}</Typography></TableCell>
             <TableCell align="left">{book.author}</TableCell>
             <TableCell align="left">{book.description}</TableCell>
-            <TableCell align="left">{book.dateCreated}</TableCell>
+            <TableCell align="left">{toStandardExtendedFormat(book.dateCreated)}</TableCell>
             <TableCell align="left">{book.categoryId}</TableCell>
         </>
     );

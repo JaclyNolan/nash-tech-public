@@ -19,7 +19,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.User)}")]
         public async Task<ActionResult<PaginatedResult<BookViewAdminModel>>> GetAllBooks([FromQuery] GetAllBookRequest request)
         {
             var (books, totalCount) = await _bookService.GetAllBooksAsync(request);

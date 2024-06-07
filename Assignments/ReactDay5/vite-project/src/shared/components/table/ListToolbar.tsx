@@ -27,11 +27,12 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 interface ListToolbarProps {
-  numSelected: number;
+  numSelected?: number;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchText: string;
-  handleMultipleDelete: () => void;
+  handleMultipleDelete?: () => void;
 }
+
 
 const ListToolbar: React.FC<ListToolbarProps> = ({
   numSelected,
@@ -42,13 +43,13 @@ const ListToolbar: React.FC<ListToolbarProps> = ({
   return (
     <StyledRoot
       sx={{
-        ...(numSelected > 0 && {
+        ...(numSelected && numSelected > 0 && {
           color: 'primary.main',
           bgcolor: 'primary.lighter',
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {numSelected && numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
         </Typography>
@@ -64,7 +65,7 @@ const ListToolbar: React.FC<ListToolbarProps> = ({
         />
       )}
 
-      {numSelected > 0 ? (
+      {handleMultipleDelete && numSelected && numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={handleMultipleDelete}>
             <Iconify icon="eva:trash-2-fill" />

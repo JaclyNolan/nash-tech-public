@@ -1,6 +1,8 @@
 ﻿using EF_Core_Assignment1.Application.DTOs.Category;
 using EF_Core_Assignment1.Application.DTOs.Common;
 using EF_Core_Assignment1.Application.Services;
+using EF_Core_Assignment1.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EF_Core_Assignment1.WebAPI.Controllers
@@ -17,6 +19,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
         public async Task<ActionResult<PaginatedResult<CategoryAdminViewModel>>> GetAllCategories([FromQuery] GetAllCategoryRequest request)
         {
             var (categories, totalCount) = await _categoryService.GetAllCategoriesAsync(request);
@@ -33,6 +36,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
         public async Task<ActionResult<CategoryAdminViewModel>> GetCategoryById(Guid id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
@@ -44,6 +48,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
         public async Task<ActionResult<CategoryAdminViewModel>> AddCategory([FromBody] CreateCategoryRequest createCategoryRequest)
         {
             var createdCategory = await _categoryService.AddCategoryAsync(createCategoryRequest);
@@ -51,6 +56,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequest updateCategoryRequest)
         {
             if (!await _categoryService.IsCategoryExist(id))
@@ -63,6 +69,7 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             await _categoryService.DeleteCategoryAsync(id);

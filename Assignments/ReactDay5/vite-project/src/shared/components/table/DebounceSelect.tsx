@@ -9,8 +9,8 @@ import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface SelectOption {
-    value: number | string;
-    label: string;
+    value: string,
+    label: string,
 }
 
 interface DebounceSelectProps {
@@ -21,6 +21,7 @@ interface DebounceSelectProps {
     label: string;
     value?: SelectOption | null;
     onChange?: (value: SelectOption | null) => void;
+    disableOptions?: SelectOption[];
     [key: string]: any; // Allow any other props
 }
 
@@ -32,6 +33,7 @@ const DebounceSelect = ({
     label,
     value = null,
     onChange,
+    disableOptions = [],
     ...props
 }: DebounceSelectProps) => {
     const [open, setOpen] = useState(false);
@@ -39,7 +41,6 @@ const DebounceSelect = ({
     const [options, _setOptions] = useState<SelectOption[]>(presetOptions);
     const [autoValue, setAutoValue] = useState<SelectOption | null>(value);
     const [searchInput, setSearchInput] = useState<string>("");
-    
 
     const setOptions = (newOptions: SelectOption[] = []) => {
         presetOptions.forEach((presetOption) => {
@@ -72,17 +73,13 @@ const DebounceSelect = ({
         return debounce(loadOptions, debounceTimeout);
     }, [fetchOptions, debounceTimeout]);
 
-
     useEffect(() => {
-        console.log('debounce useEffect re-rendered')
-        console.log(searchInput);
-        
         debounceFetcher(searchInput);
     }, [searchInput, debounceFetcher]);
 
     useEffect(() => {
         setAutoValue(value);
-    }, [value])
+    }, [value]);
 
     return (
         <Autocomplete
@@ -94,6 +91,9 @@ const DebounceSelect = ({
             onClose={() => setOpen(false)}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             getOptionLabel={(option) => `${option.label}`}
+            getOptionDisabled={(option) => 
+                Boolean(disableOptions.find((disableOption) => disableOption.value === option.value))
+            }
             value={autoValue}
             onChange={(_, newValue) => {
                 setAutoValue(newValue);
@@ -104,7 +104,7 @@ const DebounceSelect = ({
             options={options}
             loading={fetching}
             onInputChange={(_, value) => {
-                if (value !== autoValue?.value) {                    
+                if (value !== autoValue?.value) {
                     setSearchInput(value ? value : '');
                 }
             }}

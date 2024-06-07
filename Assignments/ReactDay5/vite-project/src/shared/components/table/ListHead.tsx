@@ -29,8 +29,8 @@ interface ListHeadProps {
   rowCount: number;
   headLabel: HeadLabel[];
   numSelected: number;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onRequestSort: (event: React.MouseEvent<unknown>, property: HeadLabel) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ListHead: React.FC<ListHeadProps> = ({
@@ -39,8 +39,8 @@ const ListHead: React.FC<ListHeadProps> = ({
   rowCount,
   headLabel,
   numSelected,
-  onRequestSort,
   onSelectAllClick,
+  onRequestSort,
 }) => {
   const createSortHandler = (property: HeadLabel) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
@@ -49,13 +49,15 @@ const ListHead: React.FC<ListHeadProps> = ({
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
+        {onSelectAllClick && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+            />
+          </TableCell>
+        )}
         {headLabel.map((headCell) => {
           const { id, label, alignRight, orderable, ...props } = headCell;
           return (

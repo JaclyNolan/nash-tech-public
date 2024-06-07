@@ -21,8 +21,12 @@ export const URLConstants = {
         UPDATE: "/api/categories",
         DELETE: "/api/categories"
     },
-    BORRROWING_REQUEST: {
-        GETALL_USER: "/api/borrowing/requests/user"
+    BORROWING_REQUEST: {
+        GETALL_USER: "/api/borrowing/requests/user",
+        GETALL_ADMIN: "/api/borrowing/requests",
+        GET_CURRENT_MONTH: "/api/borrowing/requests/user/current-month",
+        ADD: "/api/borrowing/requests/user",
+        UPDATE_STATUS: "/api/borrowing/requests/status"
     }
 }
 

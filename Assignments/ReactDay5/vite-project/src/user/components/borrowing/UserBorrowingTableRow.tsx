@@ -1,8 +1,10 @@
-import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material"
-import { BorrowingRequestUser, BookStatus } from '../../pages/BorrowingPages/UserBorrowingList';
-import { useState } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { useState } from "react";
+import { toStandardFormat } from "../../../common/helper";
+import BookStatusComponent from '../../../shared/components/BookStatusComponent';
+import { BorrowingRequestUser } from '../../pages/BorrowingPages/UserBorrowingList';
 
 interface UserBorrowingTableRowProps {
     request: BorrowingRequestUser
@@ -22,8 +24,8 @@ const UserBorrowingTableRow = ({ request }: UserBorrowingTableRowProps) => {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="left"><Typography variant="subtitle2" noWrap>{request.requestDate}</Typography></TableCell>
-                <TableCell align="left">{BookStatus[request.status].toString()}</TableCell>
+                <TableCell align="left"><Typography variant="subtitle2" noWrap>{toStandardFormat(request.requestDate)}</Typography></TableCell>
+                <TableCell align="left"><BookStatusComponent status={request.status}/></TableCell>
             </TableRow>
 
             <TableRow>
@@ -49,8 +51,8 @@ const UserBorrowingTableRow = ({ request }: UserBorrowingTableRowProps) => {
                                                 {details.book.title}
                                             </TableCell>
                                             <TableCell>{details.book.category.name}</TableCell>
-                                            <TableCell>{details.borrowedDate}</TableCell>
-                                            <TableCell>{details.returnedDate}</TableCell>
+                                            <TableCell>{toStandardFormat(details.borrowedDate)}</TableCell>
+                                            <TableCell>{toStandardFormat(details.returnedDate)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

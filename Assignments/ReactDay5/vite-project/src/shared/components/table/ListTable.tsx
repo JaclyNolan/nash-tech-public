@@ -35,6 +35,8 @@ interface ListTableProps<T> {
     setListTableUseStates: React.Dispatch<React.SetStateAction<ListTableUseState<T>>>;
     handleDeleteEntry: (id: any) => Promise<any>;
     refreshTable: () => void;
+    selectCheckbox?: boolean; // Optional, enabled by default
+    action?: boolean; // Optional, enabled by default
 }
 
 const ListTable: FC<ListTableProps<any>> = ({
@@ -44,7 +46,9 @@ const ListTable: FC<ListTableProps<any>> = ({
     listTableUseStates,
     setListTableUseStates,
     handleDeleteEntry,
-    refreshTable
+    refreshTable,
+    selectCheckbox = true,
+    action = true,
 }) => {
     const {
         page,
@@ -178,12 +182,14 @@ const ListTable: FC<ListTableProps<any>> = ({
     return (
         <>
             <Card>
-                <ListToolbar
-                    numSelected={selected.length}
-                    onFilterName={debounceSetter}
-                    searchText={searchText}
-                    handleMultipleDelete={handleMultpleDelete}
-                />
+                {selectCheckbox && (
+                    <ListToolbar
+                        numSelected={selected.length}
+                        onFilterName={debounceSetter}
+                        searchText={searchText}
+                        handleMultipleDelete={handleMultpleDelete}
+                    />
+                )}
                 <Spin spinning={isFetchingData}>
                     <TableContainer >
                         <Scrollbar >
@@ -195,7 +201,7 @@ const ListTable: FC<ListTableProps<any>> = ({
                                     rowCount={fetchDataLength}
                                     numSelected={selected.length}
                                     onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
+                                    onSelectAllClick={selectCheckbox ? handleSelectAllClick : undefined}
                                 />
                                 <TableBody>
                                     {fetchDataData.map((row) => {
@@ -204,13 +210,15 @@ const ListTable: FC<ListTableProps<any>> = ({
 
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox checked={selectedUser} onChange={() => handleClick(id)} />
-                                                </TableCell>
+                                                {selectCheckbox && (
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox checked={selectedUser} onChange={() => handleClick(id)} />
+                                                    </TableCell>
+                                                )}
 
                                                 {TABLE_ROW(row)}
 
-                                                <TableCell align="right">
+                                                {action && (<TableCell align="right">
                                                     <IconButton
                                                         size="large"
                                                         color="inherit"
@@ -218,7 +226,7 @@ const ListTable: FC<ListTableProps<any>> = ({
                                                     >
                                                         <Iconify icon={'eva:more-vertical-fill'} />
                                                     </IconButton>
-                                                </TableCell>
+                                                </TableCell>)}
                                             </TableRow>
                                         );
                                     })}
@@ -261,38 +269,44 @@ const ListTable: FC<ListTableProps<any>> = ({
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
+            {action ? (
+                <Popover
+                    open={Boolean(open)}
+                    anchorEl={open}
+                    onClose={handleCloseMenu}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    PaperProps={{
+                        sx: {
+                            p: 1,
+                            width: 140,
+                            '& .MuiMenuItem-root': {
+                                px: 1,
+                                typography: 'body2',
+                                borderRadius: 0.75,
+                            },
                         },
-                    },
-                }}
-            >
-                <MenuItem onClick={() => {
-                    setListTableUseStates((previous) => ({ ...previous, editModalOpen: true }))
-                }}>
-                    <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                    Edit
-                </MenuItem>
+                    }}
+                >
+                    {action && (
+                        <MenuItem onClick={() => {
+                            setListTableUseStates((previous) => ({ ...previous, editModalOpen: true }))
+                        }}>
+                            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                            Edit
+                        </MenuItem>
+                    )}
 
-                <MenuItem sx={{ color: 'error.main' }} onClick={handleSingleDelete}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-                    Delete
-                </MenuItem>
-            </Popover>
+                    {action && (
+                        <MenuItem sx={{ color: 'error.main' }} onClick={handleSingleDelete}>
+                            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                            Delete
+                        </MenuItem>
+                    )}
+                </Popover>
+            ) : null}
         </>
     );
-}
+};
 
-export default ListTable
+export default ListTable;

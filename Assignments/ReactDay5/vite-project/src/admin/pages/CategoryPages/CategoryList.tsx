@@ -6,7 +6,7 @@ import Iconify from "../../../shared/components/iconify/Iconify";
 import ListTable from "../../../shared/components/table/ListTable";
 import { URLConstants } from "../../../common/constants";
 import { HeadLabel } from "../../../shared/components/table/ListHead";
-import { nameof } from "../../../common/helper";
+import { nameof, toStandardExtendedFormat } from '../../../common/helper';
 import { Category } from "../../../admin/pages/BookPages/BookAdd";
 import { FetchData, ListTableUseState } from "../../../admin/pages/BookPages/BookList";
 import { CategoryAdd, CategoryEdit } from "../CategoryPages"
@@ -27,7 +27,7 @@ const TABLE_ROW = (category: Category) => (
     <>
         <TableCell align="left">{category.id}</TableCell>
         <TableCell align="left"><Typography variant="subtitle2" noWrap>{category.name}</Typography></TableCell>
-        <TableCell align="left">{category.dateCreated}</TableCell>
+        <TableCell align="left">{toStandardExtendedFormat(category.dateCreated)}</TableCell>
     </>
 );
 

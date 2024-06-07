@@ -35,5 +35,9 @@ export const adminNavItem: NavItem[] = [
     {
         name: "Category",
         to: routeNames.categoryList
+    },
+    {
+        name: "Borrowing",
+        to: routeNames.borrowingAdmin
     }
 ]

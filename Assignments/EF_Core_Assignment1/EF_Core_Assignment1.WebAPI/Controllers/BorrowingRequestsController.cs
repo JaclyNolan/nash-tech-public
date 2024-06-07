@@ -41,49 +41,54 @@ namespace EF_Core_Assignment1.WebAPI.Controllers
 
         [HttpPost("status/{id}")]
         [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
-        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] BookRequestStatus status)
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateBorrowingRequest request)
         {
             try
             {
                 var actionerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                await _borrowingRequestService.UpdateRequestStatus(id, status, new Guid(actionerId));
-                return Ok(new { message = "Status updated successfully." });
+                await _borrowingRequestService.UpdateRequestStatus(id, request.Status, new Guid(actionerId));
+                return NoContent();
             }
             catch (NotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred while updating the status.", details = ex.Message });
-            }
         }
 
         [HttpPost("user")]
-        [Authorize(Roles = $"{nameof(UserRole.User)}")]
+        [Authorize(Roles = nameof(UserRole.User))]
         public async Task<IActionResult> CreateUserRequest([FromBody] CreateBorrowingUserRequest request)
         {
-            // validate request
-            if (request.RequestDetails == null || request.RequestDetails.Count == 0)
+            try
             {
-                return BadRequest("Invalid request. Please provide borrowing details.");
-            }
+                // validate request
+                if (request.RequestDetails == null || request.RequestDetails.Count == 0)
+                {
+                    return BadRequest("Invalid request. Please provide borrowing details.");
+                }
 
-            if (request.RequestDetails.Count > maxBooksPerRequest)
+                if (request.RequestDetails.Count > maxBooksPerRequest)
+                {
+                    return BadRequest($"You can borrow up to {maxBooksPerRequest} books in one request.");
+                }
+
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                List<BookBorrowingRequestUserViewModel> borrowingRequestThisMonth = await _borrowingRequestService.GetBorrowingRequestForUserThisMonth(userId);
+                if (borrowingRequestThisMonth.Count > maxRequestsPerMonth)
+                {
+                    return BadRequest($"You have reached the monthly borrowing request limit of {maxRequestsPerMonth}.");
+                }
+
+                await _borrowingRequestService.CreateUserBookBorrowingRequest(userId, request);
+
+                return Ok("Request's made!");
+            }
+            catch (BorrowingValidationException ex)
             {
-                return BadRequest($"You can borrow up to {maxBooksPerRequest} books in one request.");
+                return BadRequest($"Validation error: {ex.Message}");
             }
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            List<BookBorrowingRequestUserViewModel> borrowingRequestThisMonth = await _borrowingRequestService.GetBorrowingRequestForUserThisMonth(userId);
-            if (borrowingRequestThisMonth.Count > maxRequestsPerMonth)
-            {
-                return BadRequest($"You have reached the monthly borrowing request limit of {maxRequestsPerMonth}.");
-            }
-
-            await _borrowingRequestService.CreateUserBookBorrowingRequest(userId, request);
-
-            return Ok("Request's made!");
         }
+
 
         [HttpGet("user/current-month")]
         [Authorize(Roles = $"{nameof(UserRole.User)}")]

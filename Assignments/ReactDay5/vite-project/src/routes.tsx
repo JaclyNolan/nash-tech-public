@@ -12,6 +12,7 @@ import Home from './shared/pages/Home';
 import BookList from './admin/pages/BookPages/BookList';
 import { CategoryList } from './admin/pages/CategoryPages';
 import { UserBorrowingList } from './user/pages/BorrowingPages';
+import { BorrowingList } from './admin/pages/BorrowingPages';
 
 // const Login = lazy(() => import('./guest/pages/Login'))
 
@@ -106,6 +107,10 @@ const adminRoutes: RouteObject[] = [
                     {
                         path: routeNames.categoryList,
                         element: <CategoryList />
+                    },
+                    {
+                        path: routeNames.borrowingAdmin,
+                        element: <BorrowingList />
                     }
                 ]
             }

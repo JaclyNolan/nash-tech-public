@@ -56,6 +56,22 @@ namespace EF_Core_Assignment1.Application.Services
 
         public async Task CreateUserBookBorrowingRequest(string userId, CreateBorrowingUserRequest request)
         {
+            // Validate borrowedDate and returnedDate correctness
+            foreach (var detail in request.RequestDetails)
+            {
+                if (detail.BorrowedDate >= detail.ReturnedDate)
+                {
+                    throw new BorrowedDateMustBeBeforeReturnedException();
+                }
+            }
+
+            // Ensure there are no duplicate BookIds
+            var uniqueBookIds = request.RequestDetails.Select(detail => detail.BookId).Distinct();
+            if (uniqueBookIds.Count() != request.RequestDetails.Count)
+            {
+                throw new DuplicateBookIdException();
+            }
+
             // Create borrowing requests
             var borrowingRequest = new BookBorrowingRequest
             {
@@ -63,8 +79,7 @@ namespace EF_Core_Assignment1.Application.Services
                 RequestDate = DateTime.Now,
                 Status = BookRequestStatus.Waiting,
             };
-
-            var borrowingRequestDetails = new List<BookBorrowingRequestDetails>();
+            // To-do: Validate borrowedDate and returnedDate correctness + and ensure there is no dulipcate BookIds if yes throw a unique Exception
             foreach (var detail in request.RequestDetails)
             {
                 var borrowingRequestDetail = new BookBorrowingRequestDetails
@@ -74,12 +89,10 @@ namespace EF_Core_Assignment1.Application.Services
                     ReturnedDate = detail.ReturnedDate.ToDateTime(new TimeOnly(0,0,0)),
                     BorrowedDate = detail.BorrowedDate.ToDateTime(new TimeOnly(0,0,0))
                 };
-                borrowingRequestDetails.Add(borrowingRequestDetail);
+                borrowingRequest.BookBorrowingRequestDetails.Add(borrowingRequestDetail);
             }
 
-            // Make a unit of work pattern or make a generic repo to do save change when dealing with changing two tables at the same time
-            // To-do: implement the stuff above after everything is done.
-            await _borrowingRequestDetailRepository.AddManyAsync(borrowingRequestDetails);
+
             await _borrowingRequestRepository.AddAsync(borrowingRequest);
         }
 

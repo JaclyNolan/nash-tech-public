@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EF_Core_Assignment1.Application\EF_Core_Assignment1.Application.csproj" />
     <ProjectReference Include="..\EF_Core_Assignment1.Domain\EF_Core_Assignment1.Domain.csproj" />
-    <ProjectReference Include="..\EF_Core_Assignment1.WebAPI\EF_Core_Assignment1.WebAPI.csproj" />
+    <ProjectReference Include="..\EF_Core_Assignment1.Persistance\EF_Core_Assignment1.Persistance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
