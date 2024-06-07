@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <Stack spacing={3}>
+            <Stack spacing={3} mb={3}>
                 <TextField
                     name="email"
                     label="Email address"
@@ -82,7 +82,7 @@ const LoginForm: React.FC = () => {
                     }}
                 />
             </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+            {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
                 <FormControlLabel
                     value="remember_me"
                     control={<Checkbox />}
@@ -92,7 +92,7 @@ const LoginForm: React.FC = () => {
                 <Link variant="subtitle2" underline="hover">
                     Forgot password?
                 </Link>
-            </Stack>
+            </Stack> */}
 
             {error && (
                 <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</div>

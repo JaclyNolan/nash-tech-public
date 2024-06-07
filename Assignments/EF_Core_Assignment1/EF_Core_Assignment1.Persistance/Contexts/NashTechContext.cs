@@ -84,7 +84,7 @@ namespace EF_Core_Assignment1.Persistance.Contexts
                 .HasOne(d => d.Book)
                 .WithMany(r => r.BookBorrowingRequestDetails)
                 .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(true);
 
             builder.Entity<ApplicationUser>()

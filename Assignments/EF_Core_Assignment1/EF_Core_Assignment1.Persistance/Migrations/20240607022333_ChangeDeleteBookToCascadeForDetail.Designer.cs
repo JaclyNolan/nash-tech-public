@@ -4,6 +4,7 @@ using EF_Core_Assignment1.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_Core_Assignment1.Persistance.Migrations
 {
     [DbContext(typeof(NashTechContext))]
-    partial class NashTechContextModelSnapshot : ModelSnapshot
+    [Migration("20240607022333_ChangeDeleteBookToCascadeForDetail")]
+    partial class ChangeDeleteBookToCascadeForDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,8 +154,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                     b.Property<Guid>("BookBorrowingRequestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookId")
-                        .IsRequired()
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("BorrowedDate")
@@ -422,7 +424,7 @@ namespace EF_Core_Assignment1.Persistance.Migrations
                     b.HasOne("EF_Core_Assignment1.Domain.Entities.Book", "Book")
                         .WithMany("BookBorrowingRequestDetails")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Book");

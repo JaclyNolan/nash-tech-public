@@ -10,7 +10,7 @@ namespace EF_Core_Assignment1.Domain.Entities
 
         public Guid BookBorrowingRequestId { get; set; }
 
-        public Guid BookId { get; set; }
+        public Guid? BookId { get; set; }
 
         [Required]
         public DateTime BorrowedDate { get; set; }

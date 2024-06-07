@@ -24,6 +24,7 @@ import Iconify from '../iconify/Iconify';
 import Scrollbar from '../scrollbar/Scrollbar';
 import ListHead, { HeadLabel } from './ListHead';
 import ListToolbar from './ListToolbar';
+import ConfirmPopup from '../ConfirmPopup';
 // sections
 // ----------------------------------------------------------------------
 
@@ -298,10 +299,12 @@ const ListTable: FC<ListTableProps<any>> = ({
                     )}
 
                     {action && (
-                        <MenuItem sx={{ color: 'error.main' }} onClick={handleSingleDelete}>
-                            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-                            Delete
-                        </MenuItem>
+                        <ConfirmPopup>
+                            <MenuItem sx={{ color: 'error.main' }} onClick={handleSingleDelete}>
+                                <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                                Delete
+                            </MenuItem>
+                        </ConfirmPopup>
                     )}
                 </Popover>
             ) : null}
